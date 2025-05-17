@@ -1,0 +1,6 @@
+streamlit==1.31.0
+pandas==2.1.0
+plotly==5.18.0
+fpdf==1.7.2
+matplotlib==3.8.0
+openpyxl==3.1.2
