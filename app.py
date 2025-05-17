@@ -51,9 +51,12 @@ def main():
     due to special categories, dropouts, or spot admissions. Data sourced from TGEAPCET 2024 Last Rank Statement.
     """)
     st.markdown("MADE WITH ❤️ BY [BANDA THARUN]")
-    st.markdown("GitHub: [BANDA THARUN](https://github.com/THARUN7474 )  ") 
-    st.markdown("LinkedIn: [BANDA THARUN](https://www.linkedin.com/in/banda-tharun-47b489214 )  ") # ADD YOUR LINKEDIN LINK
-    st.markdown("Twitter: [BANDA THARUN](https://github.com/THARUN7474 )  ") 
+    st.markdown("GitHub: [BANDA THARUN](https://github.com/THARUN7474 )  ")
+    # ADD YOUR LINKEDIN LINK
+    st.markdown(
+        "LinkedIn: [BANDA THARUN](https://www.linkedin.com/in/banda-tharun-47b489214 )  ")
+    st.markdown(
+        "Twitter: [BANDA THARUN](https://x.com/BandaTharun7?t=EJJTClbdTE38gveWRh2SqA&s=09 )  ")
 
 
 def render_help_tab():
@@ -93,6 +96,7 @@ def render_help_tab():
     - Always verify information with official TS EAMCET counseling notifications
     - Special category seats (sports, PH, CAP, etc.) have different cutoffs not reflected here
     """)
+
 
 if __name__ == "__main__":
     main()
