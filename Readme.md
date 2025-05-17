@@ -1,6 +1,15 @@
 # TS EAMCET 2025 College Predictor
 
-A web-based application built with Streamlit to predict eligible colleges based on TS EAMCET 2024 cutoff ranks. Users can input their rank, gender, caste, branch, and phase to find suitable colleges, compare cutoffs across phases, and analyze branch competitiveness.
+![TS EAMCET Logo](https://via.placeholder.com/800x200?text=TS+EAMCET+2025+College+Predictor)
+
+A comprehensive web application to help students predict their college admission chances based on TS EAMCET 2025 rank, built with Streamlit. A web-based application built with Streamlit to predict eligible colleges based on TS EAMCET 2024 cutoff ranks. Users can input their rank, gender, caste, branch, and phase to find suitable colleges, compare cutoffs across phases, and analyze branch competitiveness.
+
+## Demo
+
+Live Demo: [TS EAMCET College Predictor](https://your-deployment-link-here.com)
+
+![Application Screenshot](https://via.placeholder.com/800x450?text=Application+Screenshot)
+
 
 ## Features
 
@@ -11,97 +20,140 @@ A web-based application built with Streamlit to predict eligible colleges based 
 - **District Filtering**: Narrow down colleges by district.
 - **Data Visualization**: Bar charts for college distribution and branch analysis.
 
-## Prerequisites
+### 1. College Predictor
+- Input your TS EAMCET rank, gender, caste, and preferred branch
+- Filter colleges by district
+- View colleges where you're eligible based on previous year's cutoffs
+- Download results as CSV
+- Visual representation of college distribution by district
 
-- Python 3.8+
-- Streamlit
-- Pandas
-- A CSV file containing TS EAMCET 2024 cutoff data (e.g., 03_TGEAPCET_2024_FinalPhase.csv)
+### 2. Phase Comparison
+- Compare how cutoffs change across counseling phases (1st Phase, 2nd Phase, Final Phase)
+- Understand how waiting for later rounds might improve your options
+- View top colleges for each phase side by side
 
-## Installation
+### 3. Branch Analysis
+- Analyze cutoff trends across different engineering branches
+- Compare competitiveness of branches for your category
+- Get insights on most/least competitive branches
+- Visual representation of median cutoff ranks by branch
+
+### 4. College-wise Branch Analysis
+- See all available branches and their cutoffs for a specific college
+- Compare branch competitiveness within the same institution
+- Visual comparison of branch cutoffs
+- Get insights on rank range and branch difficulty
+
+### 5. Top 20 Colleges Guide
+- Information about the top 20 engineering colleges in Telangana
+- Details about college strengths and specialties
+- Based on market trends, placement records, and reputation
+
+## How It Works
+
+The application uses TS EAMCET 2024 counseling data to predict college admission chances for 2025. By analyzing historical cutoff trends across different categories (OC, BC, SC, ST, EWS) and phases, the predictor offers personalized recommendations based on your rank and preferences.
+
+## Installation and Usage
+
+### Prerequisites
+- Python 3.7 or higher
+- pip package manager
+
+### Setup
 
 1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/your-username/ts-eamcet-predictor.git
-   cd ts-eamcet-predictor
-   ```
-
-2. Create a virtual environment:
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Place the TS EAMCET cutoff CSV files in the Data/ directory.
-5. Run the application:
-
-   ```bash
-   streamlit run app.py
-   ```
-
-## Project Structure
-
-```
-ts-eamcet-predictor/
-├── Data/                    # Directory for CSV data files
-├── src/                     # Source code for modular components
-│   ├── __init__.py
-│   ├── data_loader.py       # Data loading and cleaning logic
-│   ├── predictor.py         # College prediction logic
-│   ├── ui_components.py     # Streamlit UI components
-│   ├── constants.py         # Constants like branch mappings
-├── app.py                   # Main application entry point
-├── requirements.txt         # Project dependencies
-├── README.md                # Project documentation
-├── .gitignore               # Git ignore file
+```bash
+git clone https://github.com/THARUN7474/TS-EAPCET-2025-College-Predictor-application.git
+cd TS-EAPCET-2025-College-Predictor-application
 ```
 
-## Usage
+2. Install the required packages:
+```bash
+pip install -r requirements.txt
+```
 
-1. Open the app in your browser (default: http://localhost:8501).
-2. Use the **College Predictor** tab to input your details and find eligible colleges.
-3. Use the **Phase Comparison** tab to compare cutoffs across phases.
-4. Use the **Branch Analysis** tab to explore branch competitiveness.
-5. Refer to the **Help** tab for guidance on using the tool.
+3. Run the application:
+```bash
+streamlit run app.py
+```
 
-## Deployment
+4. Access the application in your browser at `http://localhost:8501`
 
-To deploy on Streamlit Cloud or another platform:
+### Data Structure
 
-1. Push your code to a GitHub repository.
-2. Ensure requirements.txt lists all dependencies:
+The application expects data files in the following structure:
+```
+./Data/
+  ├── 01_TGEAPCET_2024_FirstPhase.csv
+  ├── 02_TGEAPCET_2024_SecondPhase.csv
+  └── 03_TGEAPCET_2024_FinalPhase.csv
+```
 
-   ```
-   streamlit
-   pandas
-   ```
+Each CSV should contain columns for college information, branch details, and cutoff ranks for all categories.
 
-3. Create a Streamlit Cloud account and connect your repository.
-4. Specify app.py as the entry point and ensure the Data/ directory is included in the repository.
-5. Deploy the app and access it via the provided URL.
+## Understanding Results
+
+- **Closing Rank**: The last rank that received admission in that college/branch in 2024
+- **Eligibility**: If your rank is equal to or better (lower number) than the closing rank, you're likely eligible
+
+## Important Notes
+
+- This tool uses historical data from TS EAMCET 2024
+- Actual 2025 cutoffs may vary based on seat availability, applicant numbers, etc.
+- Always verify information with official TS EAMCET counseling notifications
+- Special category seats (Sports, PH, CAP, etc.) have different cutoffs not reflected in this tool
+
+## For Developers
+
+### File Structure
+```
+├── app.py                 # Main application file
+├── Data/                  # Directory containing counseling data
+│   ├── FirstPhase.csv
+│   ├── SecondPhase.csv
+│   └── FinalPhase.csv
+├── requirements.txt       # Python dependencies
+└── README.md              # Project documentation
+```
+
+### Key Functions
+
+- `load_data()`: Loads and cleans data based on selected phase
+- `predict_colleges()`: Filters colleges based on user input
+- `compare_phases()`: Compares college options across different phases
+- `get_college_branches()`: Gets all branches for a specific college
+- `get_top_colleges()`: Returns information about top colleges
+
+### Extending the Application
+
+You can extend the application by:
+1. Adding more data years for historical trend analysis
+2. Implementing ML-based prediction for upcoming year cutoffs
+3. Adding placement statistics for colleges and branches
+4. Creating a personalized recommendation engine
 
 ## Contributing
 
-1. Fork the repository.
-2. Create a feature branch (git checkout -b feature/new-feature).
-3. Commit changes (git commit -m 'Add new feature').
-4. Push to the branch (git push origin feature/new-feature).
-5. Open a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-MIT License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Notes
+## Acknowledgments
 
-- The app uses historical TS EAMCET 2024 data. Actual 2025 cutoffs may vary.
-- Ensure CSV files are correctly formatted and placed in the Data/ directory.
-- For issues or feature requests, open a GitHub issue.
+- TS EAMCET counseling data from official sources
+- Streamlit for the interactive web framework
+- All contributors who have helped improve this tool
+
+## Contact
+
+Tharun - [GitHub Profile](https://github.com/THARUN7474)
+
+Project Link: [https://github.com/THARUN7474/TS-EAPCET-2025-College-Predictor-application](https://github.com/THARUN7474/TS-EAPCET-2025-College-Predictor-application)
