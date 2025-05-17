@@ -27,8 +27,8 @@ Thumbs.db
 .streamlit/
 
 # Data files (exclude sensitive data)
-Data/*.csv
-paste.txt
+# Data/*.csv
+
 
 # Logs
 *.log

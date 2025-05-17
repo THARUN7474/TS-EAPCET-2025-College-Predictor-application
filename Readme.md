@@ -107,13 +107,27 @@ Each CSV should contain columns for college information, branch details, and cut
 
 ### File Structure
 ```
-├── app.py                 # Main application file
-├── Data/                  # Directory containing counseling data
-│   ├── FirstPhase.csv
-│   ├── SecondPhase.csv
-│   └── FinalPhase.csv
-├── requirements.txt       # Python dependencies
-└── README.md              # Project documentation
+project_structure/
+├── app.py                  # Main application entry point
+├── app1.py                  # Main application entry point--singlefile
+├── requirements.txt        # Dependencies
+├── modules/
+│   ├── __init__.py         # Makes modules directory a package
+│   ├── data_loader.py      # Data loading and processing functions
+│   ├── college_predictor.py # College prediction functions
+│   ├── visualizations.py   # Data visualization functions
+│   ├── pdf_generator.py    # PDF generation functions
+│   └── constants.py        # Constants and mappings
+├── data/                   # Data directory
+│   ├── 01_TGEAPCET_2024_FirstPhase.csv
+│   ├── 02_TGEAPCET_2024_SecondPhase.csv
+│   └── 03_TGEAPCET_2024_FinalPhase.csv
+└── pages/                  # Streamlit multipage app pages
+    ├── __init__.py
+    ├── college_predictor.py
+    ├── phase_comparison.py
+    ├── branch_analysis.py
+    └── college_branches.py
 ```
 
 ### Key Functions
