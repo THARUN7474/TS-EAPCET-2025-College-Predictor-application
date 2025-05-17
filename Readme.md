@@ -6,7 +6,7 @@ A comprehensive web application to help students predict their college admission
 
 ## Demo
 
-Live Demo: [TS EAMCET College Predictor](https://your-deployment-link-here.com)
+Live Demo: [TS EAMCET College Predictor]([https://ts-eapcet-2025-predictor.streamlit.app/])
 
 ![Application Screenshot](https://via.placeholder.com/800x450?text=Application+Screenshot)
 
