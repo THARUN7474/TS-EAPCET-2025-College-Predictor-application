@@ -56,7 +56,7 @@ def main():
     st.markdown(
         "LinkedIn: [BANDA THARUN](https://www.linkedin.com/in/banda-tharun-47b489214 )  ")
     st.markdown(
-        "Twitter: [BANDA THARUN](https://x.com/BandaTharun7?t=EJJTClbdTE38gveWRh2SqA&s=09 )  ")
+        "Twitter: [BANDA THARUN](https://x.com/BandaTharun7/ )  ")
 
 
 def render_help_tab():
