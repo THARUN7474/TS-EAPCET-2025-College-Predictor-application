@@ -50,6 +50,10 @@ def main():
     **Note**: This predictor uses TS EAMCET 2024 cutoff ranks. Actual admissions may vary 
     due to special categories, dropouts, or spot admissions. Data sourced from TGEAPCET 2024 Last Rank Statement.
     """)
+    st.markdown("MADE WITH ❤️ BY [BANDA THARUN]")
+    st.markdown("GitHub: [BANDA THARUN](https://github.com/THARUN7474 )  ") 
+    st.markdown("LinkedIn: [BANDA THARUN](https://www.linkedin.com/in/banda-tharun-47b489214 )  ") # ADD YOUR LINKEDIN LINK
+    st.markdown("Twitter: [BANDA THARUN](https://github.com/THARUN7474 )  ") 
 
 
 def render_help_tab():
