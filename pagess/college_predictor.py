@@ -11,6 +11,7 @@ from modules.pdf_generator import dataframe_to_pdf
 from modules.constants import BRANCH_MAP
 from modules.visualizations import create_branch_distribution_chart
 
+
 def render():
     """Render the College Predictor page."""
     st.markdown(
@@ -27,13 +28,13 @@ def render():
 
         with col2:
             caste = st.selectbox("Select Caste", [
-                                "OC", "BC_A", "BC_B", "BC_C", "BC_D", "BC_E", "SC", "ST", "EWS"])
+                "OC", "BC_A", "BC_B", "BC_C", "BC_D", "BC_E", "SC", "ST", "EWS"])
             branch_options = ["N/A"] + list(BRANCH_MAP.keys())
             branch = st.selectbox("Select Branch", branch_options)
 
         with col3:
             phase = st.selectbox("Select Phase Data", [
-                                "Final Phase", "2nd Phase", "1st Phase"])
+                "Final Phase", "2nd Phase", "1st Phase"])
             # Get district options from data
             df = load_data(phase)
             districts = ["All Districts"]
@@ -94,8 +95,8 @@ def render():
                 # st.subheader("Eligible Colleges")
 
                 st.markdown(
-                        "Download your results in CSV, Excel, or PDF format using the buttons above i suggest you to use CSV or Excel for better formatting and in next update i will add a better UI for PDF")
-                    # st.markdown("---")
+                    "Download your results in CSV, Excel, or PDF format using the buttons above i suggest you to use CSV or Excel for better formatting and in next update i will add a better UI for PDF")
+                # st.markdown("---")
                 st.subheader("Eligible Colleges")
 
                 # Displaying results in a beautiful table

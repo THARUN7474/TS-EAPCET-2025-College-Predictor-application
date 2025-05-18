@@ -2,17 +2,24 @@
 Main entry point for the TS EAMCET 2025 College Predictor application.
 """
 import streamlit as st
+import logging
+from datetime import datetime
 from modules.data_loader import load_data
 from modules.constants import TOP_COLLEGES
-from pagess import college_predictor, phase_comparison, branch_analysis, college_branches
+from pagess import college_predictor, phase_comparison, branch_analysis, college_branches, college_search
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Setting page configuration for better appearance
 st.set_page_config(page_title="TS EAMCET 2025 College Predictor",
                    page_icon="🎓", layout="wide")
 
-
 def main():
     """Main function to run the Streamlit application."""
+    logger.info("Starting TS EAMCET 2025 College Predictor application")
+    
     st.title("🎓 TS EAMCET 2025 College Predictor")
 
     # Tabs for different functionalities
@@ -21,6 +28,7 @@ def main():
         "Phase Comparison",
         "Branch Analysis",
         "College-wise Branches",
+        "College Search by Branch",
         "Help"
     ])
 
@@ -40,8 +48,12 @@ def main():
     with tabs[3]:
         college_branches.render()
 
-    # Help Tab
+    # College Search by Branch Tab
     with tabs[4]:
+        college_search.render()
+
+    # Help Tab
+    with tabs[5]:
         render_help_tab()
 
     # Adding footer
@@ -50,14 +62,12 @@ def main():
     **Note**: This predictor uses TS EAMCET 2024 cutoff ranks. Actual admissions may vary 
     due to special categories, dropouts, or spot admissions. Data sourced from TGEAPCET 2024 Last Rank Statement.
     """)
+    st.markdown(f"**Last Updated**: 07:33 PM IST on Sunday, May 18, 2025")
     st.markdown("MADE WITH ❤️ BY [BANDA THARUN]")
-    st.markdown("GitHub: [BANDA THARUN](https://github.com/THARUN7474 )  ")
-    # ADD YOUR LINKEDIN LINK
-    st.markdown(
-        "LinkedIn: [BANDA THARUN](https://www.linkedin.com/in/banda-tharun-47b489214 )  ")
-    st.markdown(
-        "Twitter: [BANDA THARUN](https://x.com/BandaTharun7/ )  ")
-
+    st.markdown("GitHub: [BANDA THARUN](https://github.com/THARUN7474 )")
+    st.markdown("LinkedIn: [BANDA THARUN](https://www.linkedin.com/in/banda-tharun-47b489214 )")
+    st.markdown("Twitter: [BANDA THARUN](https://x.com/BandaTharun7/ )")
+    st.markdown("**Support This Project**: [Donate ₹1 via Razorpay](https://razorpay.me/@your-razorpay-id)")
 
 def render_help_tab():
     """Render the Help tab content."""
@@ -84,6 +94,11 @@ def render_help_tab():
        - Compare the difficulty level of different branches within the same institution
        - See the list of top 20 colleges based on market trends
     
+    5. **College Search by Branch Tab**:
+       - Enter your desired branch, caste, and gender to find colleges offering that branch
+       - Use the 'N/A' option for caste to see closing ranks across all categories
+       - View additional details like fees, place, and district for each college
+
     ### Understanding the Results
     
     - **Closing Rank**: The last rank that got admission in that college/branch in 2024
@@ -96,7 +111,6 @@ def render_help_tab():
     - Always verify information with official TS EAMCET counseling notifications
     - Special category seats (sports, PH, CAP, etc.) have different cutoffs not reflected here
     """)
-
 
 if __name__ == "__main__":
     main()
