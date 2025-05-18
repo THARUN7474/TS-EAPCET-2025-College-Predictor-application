@@ -253,9 +253,28 @@ def create_footer():
             "- "
             "[![Twitter](https://img.shields.io/badge/Twitter-BandaTharun7-1da1f2?logo=twitter)](https://x.com/BandaTharun7/)"
         )
-    st.info(
-        "Support This Project: [Donate ₹1/  ₹4/  ₹7/  ₹99 or more via Razorpay](https://razorpay.me/@your-razorpay-id)"
+    # st.info(
+    #     "Support This Project: [Donate ₹1/  ₹4/  ₹7/  ₹99 or more via Razorpay](https://razorpay.me/@your-razorpay-id)"
+    # )
+    st.markdown("### ☕ Support My Work")
+    st.markdown(
+        """
+        If you found this tool helpful, consider supporting me on [Buy Me a Coffee](https://www.buymeacoffee.com/bandatharun74)!  
+        Your support helps me keep building and maintaining tools like this ❤️
+        """
     )
+
+    # Optional: Add BuyMeACoffee Button
+    st.markdown(
+        """
+        <a href="https://www.buymeacoffee.com/bandatharun74" target="_blank">
+            <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" height="60">
+        </a>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown("---")
     st.caption(
         "**Note**: This predictor uses TS EAMCET 2024 cutoff ranks. Actual admissions may vary due to special categories, dropouts, or spot admissions. Data sourced from TGEAPCET 2024 Last Rank Statement."
     )
