@@ -7,6 +7,7 @@ import numpy as np
 
 from modules.data_loader import load_data
 from modules.constants import get_caste_column_name
+from modules.visualizations import create_closing_ranks_chart, create_branch_distribution_chart
 
 
 def render():
@@ -54,10 +55,11 @@ def render():
                                     'BC_E BOYS', 'BC_E GIRLS', 'SC BOYS', 'SC GIRLS', 'ST BOYS',
                                     'ST GIRLS', 'EWS GEN OU', 'EWS GIRLS OU']
                     display_columns = ['Institute Name',
-                                       'Place', 'Tuition Fee'] + rank_columns
+                                       'Place', 'Dist Code', 'Tuition Fee'] + rank_columns
                     result_df = filtered_df[display_columns].rename(columns={
                         'Institute Name': 'College Name',
                         'Place': 'Place',
+                        'Dist Code': 'District',
                         'Tuition Fee': 'Tuition Fee (₹)'
                     })
 
@@ -79,10 +81,11 @@ def render():
                             f"Data for {selected_caste} {selected_gender} not available in the dataset.")
                         return
                     display_columns = ['Institute Name',
-                                       'Place', 'Tuition Fee', target_column]
+                                       'Place', 'Dist Code', 'Tuition Fee', target_column]
                     result_df = filtered_df[display_columns].rename(columns={
                         'Institute Name': 'College Name',
                         'Place': 'Place',
+                        'Dist Code': 'District',
                         'Tuition Fee': 'Tuition Fee (₹)',
                         target_column: 'Closing Rank'
                     })
@@ -117,7 +120,7 @@ def render():
                 # Rearrange columns in the desired order
                 if selected_caste != "N/A":
                     result_df = result_df[[
-                        'S.No', 'College Name', 'Place', 'Closing Rank', 'Tuition Fee (₹)']]
+                        'S.No', 'College Name', 'Place', 'Closing Rank', 'Tuition Fee (₹)', 'District']]
 
                 # Display results
                 st.subheader(f"Colleges Offering {selected_branch}")
@@ -129,6 +132,16 @@ def render():
                     result_df,
                     use_container_width=True
                 )
+
+                # TODO adding it making it more interactive but readablity is compromised so need to work on it
+                # # Add Closing Ranks Visualization (Chart.js Bar Chart)
+                # if selected_caste == "N/A":
+                #     categories = rank_columns
+                # else:
+                #     categories = ['Closing Rank']
+                # chart_title = f"Closing Ranks for {selected_branch} ({selected_caste if selected_caste != 'N/A' else 'All Categories'})"
+                # create_closing_ranks_chart(
+                #     result_df, categories, title=chart_title)
 
                 # Insights
                 if selected_caste != "N/A":
@@ -167,4 +180,7 @@ def render():
                         """)
                     else:
                         st.warning(
-                            "No valid closing rank data available for analysis.")
+                            "Douglass No valid closing rank data available for analysis.")
+
+                # Add College Distribution by District Visualization (Streamlit Bar Chart)
+                # create_branch_distribution_chart(result_df)
