@@ -15,7 +15,7 @@ from modules.visualizations import create_branch_distribution_chart
 def render():
     """Render the College Predictor page."""
     st.markdown(
-        "Enter your details to find colleges you may be eligible for based on TS EAMCET cutoff ranks.")
+        "Enter your details to find colleges you may be eligible for based on TS EAMCET 2024 cutoff ranks.")
 
     # Creating input form
     with st.form("predictor_form"):
