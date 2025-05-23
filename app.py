@@ -18,15 +18,31 @@ logger = logging.getLogger(__name__)
 st.set_page_config(page_title="TS EAMCET 2025 College Predictor",
                    page_icon="🎓", layout="wide")
 
-st.info(
-    "📚 **Find More Student Content:** "
-    "[![LearnwithGoutham](https://img.shields.io/badge/LearnwithGoutham-darkred?logo=youtube)](https://www.youtube.com/@LearnwithGoutham) "
-    "[![Goutham](https://img.shields.io/badge/Goutham-purple?logo=instagram)](https://instagram.com/gouthamsankeerth)"
-    "[![Tharun](https://img.shields.io/badge/Tharun-darkorange?logo=youtube)](https://www.youtube.com/@banatharun_74) "
 
-    "  "
-    "💖 **Support This Project(to help keep the website running and free for everyone):** [Support via Razorpay](https://razorpay.me/@your-razorpay-id)"
-)
+col1, col2 = st.columns([2, 2])
+
+with col1:
+
+    st.info(
+        "📚 **Find More Student Content:**\n"
+        "[![LearnwithGoutham](https://img.shields.io/badge/LearnwithGoutham-darkred?logo=youtube)](https://www.youtube.com/@LearnwithGoutham) "
+        "[![Goutham](https://img.shields.io/badge/Goutham-purple?logo=instagram)](https://instagram.com/gouthamsankeerth) "
+        "[![Tharun](https://img.shields.io/badge/Tharun-darkorange?logo=youtube)](https://www.youtube.com/@banatharun_74)"
+        "  "
+        "  "
+        "  "
+        "  "
+        "  "
+        "  ""    🚀 "
+    )
+
+with col2:
+    st.info(
+        "💖 **Support This Project**\n"
+        "To help keep the website running and free for everyone:\n"
+        "  "
+        "[Support via Razorpay](https://razorpay.me/@your-razorpay-id)"
+    )
 
 
 def create_footer():
