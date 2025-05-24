@@ -42,7 +42,8 @@ def render():
                 districts.extend(sorted(df['Dist Code'].unique().tolist()))
             district_filter = st.selectbox("Filter by District", districts)
 
-        submit_button = st.form_submit_button("Predict Colleges")
+        submit_button = st.form_submit_button(
+            "Predict Colleges", type="primary")
 
     # Processing form submission
     if submit_button:
