@@ -48,6 +48,9 @@ def render():
         st.info(
             "Note: Due to changes in local and non-local quota policies for TS EAPCET 2025, cutoff ranks may increase significantly compared to previous years. For example, a 1000 rank in 2024 may correspond to a 1500–2000 rank in 2025. Please consider this while selecting your web options, as actual ranks may vary. ALL THE BEST! 😊"
         )
+        # st.balloons()
+        # st.snow()
+        # st.toast('Mr Stay-Puft')
 
         # st.markdown("This is just a prediction based on previous years data and this is not a guarantee that you will get the college or branch you want so please use this as a reference only and not as a final decision making tool")
 

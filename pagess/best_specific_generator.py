@@ -397,6 +397,8 @@ def render():
     **Strategic Template**: Shows the complete ideal strategy pattern (all possibilities)
     """
     )
+    st.markdown("""You can Find Our Top 20 Colleges for TS EAMCET 2025 list in help tab of this app.
+            """)
 
     # Common inputs
     with st.form("best_options_form"):
@@ -676,8 +678,6 @@ def render():
 
     👉 If you already have strong preferences for **specific colleges or branches**, we recommend using other tools on this website to **customize your web options**.
     """)
-
-    
 
 
 if __name__ == "__main__":

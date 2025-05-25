@@ -220,6 +220,9 @@ def render():
                 help="Additional ranks added to cutoff for safety margin"
             )
 
+            st.markdown(""" Find Our Top 20 Colleges for TS EAMCET 2025 list in help tab of this app.
+            """)
+
         # Branch selection
         st.markdown(
             "### 🎓 Select Your Preferred Branches (Select branches in your order of priority)")

@@ -197,6 +197,8 @@ def render():
             - **Gender-Specific**: Considers gender-specific admission patterns and success rates
             """
         )
+        st.markdown("""You can Find Our Top 20 Colleges for TS EAMCET 2025 list in help tab of this app.
+            """)
 
         phase = st.selectbox(
             "Select Phase Data",
