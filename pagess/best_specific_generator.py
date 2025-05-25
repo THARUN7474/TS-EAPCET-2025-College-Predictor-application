@@ -81,6 +81,8 @@ def get_hardcoded_best_list(list_type="Manual Ranking (Our Curated List)", gende
             })
             priority += 1
 
+    for i in range(min(5, len(selected_colleges))):
+        college = selected_colleges[i]
         # ECE branches
         for branch in ECE_BRANCHES[:1]:  # Only ECE
             hardcoded_options.append({
@@ -112,6 +114,8 @@ def get_hardcoded_best_list(list_type="Manual Ranking (Our Curated List)", gende
             })
             priority += 1
 
+    for i in range(5, min(10, len(selected_colleges))):
+        college = selected_colleges[i]
         # ECE
         hardcoded_options.append({
             'Priority': priority,
@@ -126,7 +130,7 @@ def get_hardcoded_best_list(list_type="Manual Ranking (Our Curated List)", gende
 
     # Top 11-15 Colleges: CSE/CSE-aligned → ECE
     # st.write("🥉 **Top 11-15 Colleges Priority Order:**")
-    for i in range(10, min(15, len(selected_colleges))):
+    for i in range(10, min(20, len(selected_colleges))):
         college = selected_colleges[i]
 
         # Top CSE branches only
@@ -142,6 +146,8 @@ def get_hardcoded_best_list(list_type="Manual Ranking (Our Curated List)", gende
             })
             priority += 1
 
+    for i in range(10, min(20, len(selected_colleges))):
+        college = selected_colleges[i]
         # ECE
         hardcoded_options.append({
             'Priority': priority,
@@ -171,40 +177,7 @@ def get_hardcoded_best_list(list_type="Manual Ranking (Our Curated List)", gende
             })
             priority += 1
 
-    # Top 16-20 Colleges: All branches
-    # st.write("🛠️ **Top 16-20 Colleges - All Branches:**")
-    for i in range(15, min(20, len(selected_colleges))):
-        college = selected_colleges[i]
-
-        # Mix of all branch types
-        all_priority_branches = CSE_BRANCHES
-        for branch in all_priority_branches:
-            hardcoded_options.append({
-                'Priority': priority,
-                'College_Tier': f"Top {i+1}",
-                'College': college["name"],
-                'Branch_Code': branch,
-                'Branch_Name': BRANCH_MAP.get(branch, branch),
-                'Strategy': 'Mixed Strategy in Top 16-20-CSE AND CSE Aligned',
-                'Note': 'Consider - Lower Tier College + Various Branches'
-            })
-            priority += 1
-
-        # ECE
-        hardcoded_options.append({
-            'Priority': priority,
-            'College_Tier': f"Top {i+1}",
-            'College': college["name"],
-            'Branch_Code': 'ECE',
-            'Branch_Name': BRANCH_MAP.get('ECE', 'ECE'),
-            'Strategy': 'ECE in Top 16-20',
-            'Note': 'Decent - Lower Tier College + Core Branch'
-        })
-        priority += 1
-
-    # # Top 1-10 Colleges: Other Core Branches (backup strategy)
-    # st.write("⚙️ **Top 1-10 Colleges - Other Core Branches (Backup):**")
-    for i in range(15, min(20, len(selected_colleges))):
+    for i in range(10, min(20, len(selected_colleges))):
         college = selected_colleges[i]
 
         for branch in OTHER_CORE_BRANCHES:
@@ -295,6 +268,11 @@ def get_rank_based_best_list(user_rank, gender, caste, phase="Final Phase", buff
         # Then CSE-aligned
         check_and_add_branch(
             college_name, CSE_ALIGNED_BRANCHES, tier, "CSE-Aligned in Top 5")
+
+    for i in range(min(5, len(selected_colleges))):
+        college = selected_colleges[i]
+        college_name = college["name"]
+        tier = f"Top {i+1}"
         # Then ECE
         check_and_add_branch(college_name, ECE_BRANCHES, tier, "ECE in Top 5")
 
@@ -308,11 +286,16 @@ def get_rank_based_best_list(user_rank, gender, caste, phase="Final Phase", buff
                              tier, "CSE in Top 6-10")
         check_and_add_branch(college_name, CSE_ALIGNED_BRANCHES,
                              tier, "CSE-Aligned in Top 6-10")
+
+    for i in range(5, min(10, len(selected_colleges))):
+        college = selected_colleges[i]
+        college_name = college["name"]
+        tier = f"Top {i+1}"
         check_and_add_branch(college_name, ECE_BRANCHES,
                              tier, "ECE in Top 6-10")
 
-    # Top 11-15 Colleges: CSE/CSE-aligned → ECE
-    for i in range(10, min(15, len(selected_colleges))):
+    # Top 11-20 Colleges: CSE/CSE-aligned → ECE
+    for i in range(10, min(20, len(selected_colleges))):
         college = selected_colleges[i]
         college_name = college["name"]
         tier = f"Top {i+1}"
@@ -320,9 +303,14 @@ def get_rank_based_best_list(user_rank, gender, caste, phase="Final Phase", buff
         check_and_add_branch(college_name, CSE_BRANCHES,
                              tier, "CSE in Top 11-15")
         check_and_add_branch(college_name, CSE_ALIGNED_BRANCHES,
-                             tier, "CSE-Aligned in Top 11-15")
+                             tier, "CSE-Aligned in Top 11-20")
+
+    for i in range(10, min(20, len(selected_colleges))):
+        college = selected_colleges[i]
+        college_name = college["name"]
+        tier = f"Top {i+1}"
         check_and_add_branch(college_name, ECE_BRANCHES,
-                             tier, "ECE in Top 11-15")
+                             tier, "ECE in Top 11-20")
 
     # Top 1-10 Colleges: Other Core Branches (backup)
     for i in range(min(10, len(selected_colleges))):
@@ -331,23 +319,10 @@ def get_rank_based_best_list(user_rank, gender, caste, phase="Final Phase", buff
         tier = f"Top {i+1} (Backup)"
 
         check_and_add_branch(college_name, OTHER_CORE_BRANCHES,
-                             tier, "Core Branches Backup")
-
-    # Top 16-20 Colleges: All branches
-    for i in range(15, min(20, len(selected_colleges))):
-        college = selected_colleges[i]
-        college_name = college["name"]
-        tier = f"Top {i+1}"
-
-        check_and_add_branch(college_name, CSE_BRANCHES,
-                             tier, "CSE in Top 16-20")
-        check_and_add_branch(college_name, CSE_ALIGNED_BRANCHES,
-                             tier, "CSE-Aligned in Top 16-20")
-        check_and_add_branch(college_name, ECE_BRANCHES,
-                             tier, "ECE in Top 16-20")
+                             tier, "Core Branches in Top 1-10")
 
     # Top 15-20 Colleges: Other Core Branches (backup)
-    for i in range(15, min(20, len(selected_colleges))):
+    for i in range(10, min(20, len(selected_colleges))):
         college = selected_colleges[i]
         college_name = college["name"]
         tier = f"Top {i+1} (Backup)"
@@ -402,7 +377,7 @@ def render():
     st.subheader("🎯 Best Possible WebOptions Generator")
 
     st.markdown("""
-   Your strategic tool for selecting the most suitable colleges and branches  Whether you're confused between a top college or a dream branch, this tool helps you discover **data-backed combinations** that give you the best shot at securing a seat.
+   If you're confused between a top college or a dream branch or Do not know what to prioritize, this tool helps you discover **data-backed combinations** that give you the best shot at securing a seat.
     """)
 
     # st.markdown("""
@@ -410,7 +385,7 @@ def render():
     # """)
 
     # Strategy Selection
-    st.markdown("### 🎮 Choose Your Strategy Type")
+    st.markdown("#### 🎮 Choose Your Strategy Type")
     strategy_type = st.radio(
         "Select the type of web options list you want:",
         [
@@ -623,6 +598,15 @@ def render():
                 mime="text/csv"
             )
 
+            excel_buffer = io.BytesIO()
+            df_template.to_excel(excel_buffer, index=False)
+            st.download_button(
+                label="Download Results as Excel",
+                data=excel_buffer.getvalue(),
+                file_name=f"TS_EAMCET_2025_WebOptions_Rank_{list_type.replace(' ', '_')}_{caste}_{gender}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
+
         # Common insights section
         st.markdown("### 🎯 Strategic Insights")
 
@@ -632,13 +616,12 @@ def render():
             st.markdown("**🏆 Hierarchy Explanation:**")
             st.markdown("""
              \n
-            - 🥇 **Top 1–5 Colleges**: CSE/CSE Aligned branches → ECE branch  (Premium Strategy) 
-            - 🥈 **Top 6–10 Colleges**: CSE/CSE Aligned branches → ECE branch (Excellent Strategy)  
-            - 🥉 **Top 11–15 Colleges**: CSE/CSE Aligned branches → ECE branch (Good Strategy)
-            - ⚙️ **Top 1–10 Colleges**: EEE/Mech/Civil and other branches (Backup Strategy)
-            - 🛠️ **Top 16–20 Colleges**: CSE/CSE Aligned branches → ECE branch (Consider Strategy)
-            - 🛠️ **Top 16–20 Colleges**: EEE/Mech/Civil and other branches (Consider Strategy)
-            - 🧩 **Beyond Top 20**: Ascending cutoff order (Last Resort)
+            - 🥇 **Top 1–5 Colleges**: CSE/CSE Aligned branches → ECE branch  
+            - 🥈 **Top 6–10 Colleges**: CSE/CSE Aligned branches → ECE branch 
+            - 🥉 **Top 11–20 Colleges**: CSE/CSE Aligned branches → ECE branch 
+            - ⚙️ **Top 1–10 Colleges**: EEE/Mech/Civil and other branches 
+            - 🛠️ **Top 11–20 Colleges**: EEE/Mech/Civil and other branches 
+            - 🧩 **Beyond Top 20**: Ascending cutoff order 
             - This advanced tool follows our optimized hierarchy
             """)
 
@@ -694,13 +677,7 @@ def render():
     👉 If you already have strong preferences for **specific colleges or branches**, we recommend using other tools on this website to **customize your web options**.
     """)
 
-    st.success("""
-    ✅ **Why Use This Tool?**
-    - Save time by exploring the **most probable and optimal combinations**
-    - Make informed decisions based on **rank-wise insights**
-    - Avoid common mistakes in web option ordering
-    - Use expert patterns to get closer to your dream seat
-    """)
+    
 
 
 if __name__ == "__main__":

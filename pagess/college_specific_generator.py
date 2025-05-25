@@ -299,8 +299,8 @@ def render():
         st.info(ranking_info[list_type])
 
         # Create tabs for different views
-        tab1, tab2, tab3, tab4 = st.tabs(
-            ["📋 All Options", "🏆 Top 20 Focus", "🏛️ College-wise View", "📊 Analysis"])
+        tab1, tab2, tab3 = st.tabs(
+            ["📋 All Options", "🏆 Top 20 Focus", "🏛️ College-wise View"])
 
         with tab1:
             # Convert to DataFrame
@@ -474,75 +474,75 @@ def render():
                         use_container_width=True
                     )
 
-        with tab4:
-            # Analysis and insights
-            st.markdown("#### 📊 Comprehensive Analysis")
+        # with tab4:
+        #     # Analysis and insights
+        #     st.markdown("#### 📊 Comprehensive Analysis")
 
-            # Ranking comparison
-            st.markdown("**🏆 Top 20 College Distribution by Ranking Method:**")
+        #     # Ranking comparison
+        #     st.markdown("**🏆 Top 20 College Distribution by Ranking Method:**")
 
-            ranking_comparison = pd.DataFrame({
-                'Ranking Method': ['Manual Ranking', 'Cutoff-Based', 'Gender-Specific'],
-                'Focus': [
-                    'Overall reputation & industry recognition',
-                    'Most competitive cutoffs & selectivity',
-                    f'{gender}-specific admission success patterns'
-                ],
-                'Best For': [
-                    'Brand value & long-term career growth',
-                    'Highly competitive students',
-                    f'{gender} candidates seeking optimized chances'
-                ]
-            })
+        #     ranking_comparison = pd.DataFrame({
+        #         'Ranking Method': ['Manual Ranking', 'Cutoff-Based', 'Gender-Specific'],
+        #         'Focus': [
+        #             'Overall reputation & industry recognition',
+        #             'Most competitive cutoffs & selectivity',
+        #             f'{gender}-specific admission success patterns'
+        #         ],
+        #         'Best For': [
+        #             'Brand value & long-term career growth',
+        #             'Highly competitive students',
+        #             f'{gender} candidates seeking optimized chances'
+        #         ]
+        #     })
 
-            st.dataframe(ranking_comparison, hide_index=True,
-                         use_container_width=True)
+        #     st.dataframe(ranking_comparison, hide_index=True,
+        #                  use_container_width=True)
 
-            # Branch popularity analysis
-            st.markdown("**📈 Most Available Branches Across All Colleges:**")
+        #     # Branch popularity analysis
+        #     st.markdown("**📈 Most Available Branches Across All Colleges:**")
 
-            branch_counts = {}
-            for opt in all_options:
-                branch = opt['Branch Code']
-                if branch not in branch_counts:
-                    branch_counts[branch] = {'count': 0, 'cutoffs': []}
+        #     branch_counts = {}
+        #     for opt in all_options:
+        #         branch = opt['Branch Code']
+        #         if branch not in branch_counts:
+        #             branch_counts[branch] = {'count': 0, 'cutoffs': []}
 
-                branch_counts[branch]['count'] += 1
-                if isinstance(opt['Closing Rank'], int):
-                    branch_counts[branch]['cutoffs'].append(
-                        opt['Closing Rank'])
+        #         branch_counts[branch]['count'] += 1
+        #         if isinstance(opt['Closing Rank'], int):
+        #             branch_counts[branch]['cutoffs'].append(
+        #                 opt['Closing Rank'])
 
-            # Create branch analysis
-            branch_analysis = []
-            for branch, data in branch_counts.items():
-                avg_cutoff = sum(
-                    data['cutoffs']) / len(data['cutoffs']) if data['cutoffs'] else None
-                min_cutoff = min(data['cutoffs']) if data['cutoffs'] else None
+        #     # Create branch analysis
+        #     branch_analysis = []
+        #     for branch, data in branch_counts.items():
+        #         avg_cutoff = sum(
+        #             data['cutoffs']) / len(data['cutoffs']) if data['cutoffs'] else None
+        #         min_cutoff = min(data['cutoffs']) if data['cutoffs'] else None
 
-                branch_analysis.append({
-                    'Branch Code': branch,
-                    'Branch Name': BRANCH_MAP.get(branch, branch),
-                    'Available Colleges': data['count'],
-                    'Best Cutoff': min_cutoff,
-                    'Average Cutoff': round(avg_cutoff) if avg_cutoff else None
-                })
+        #         branch_analysis.append({
+        #             'Branch Code': branch,
+        #             'Branch Name': BRANCH_MAP.get(branch, branch),
+        #             'Available Colleges': data['count'],
+        #             'Best Cutoff': min_cutoff,
+        #             'Average Cutoff': round(avg_cutoff) if avg_cutoff else None
+        #         })
 
-            # Sort by availability
-            branch_analysis.sort(
-                key=lambda x: x['Available Colleges'], reverse=True)
+        #     # Sort by availability
+        #     branch_analysis.sort(
+        #         key=lambda x: x['Available Colleges'], reverse=True)
 
-            st.dataframe(
-                pd.DataFrame(branch_analysis[:15]),  # Show top 15
-                column_config={
-                    "Branch Code": st.column_config.TextColumn("Branch", width="small"),
-                    "Branch Name": st.column_config.TextColumn("Branch Name", width="large"),
-                    "Available Colleges": st.column_config.NumberColumn("Colleges", width="small"),
-                    "Best Cutoff": st.column_config.NumberColumn("Best Rank", format="%d"),
-                    "Average Cutoff": st.column_config.NumberColumn("Avg Rank", format="%d")
-                },
-                hide_index=True,
-                use_container_width=True
-            )
+        #     st.dataframe(
+        #         pd.DataFrame(branch_analysis[:15]),  # Show top 15
+        #         column_config={
+        #             "Branch Code": st.column_config.TextColumn("Branch", width="small"),
+        #             "Branch Name": st.column_config.TextColumn("Branch Name", width="large"),
+        #             "Available Colleges": st.column_config.NumberColumn("Colleges", width="small"),
+        #             "Best Cutoff": st.column_config.NumberColumn("Best Rank", format="%d"),
+        #             "Average Cutoff": st.column_config.NumberColumn("Avg Rank", format="%d")
+        #         },
+        #         hide_index=True,
+        #         use_container_width=True
+        #     )
 
         # Strategy recommendations
         st.markdown("### 💡 Enhanced Strategic Recommendations")
@@ -582,7 +582,7 @@ def render():
             - **Top 5-7 options**: Stretch goals from Top 20
             - **Next 8-10 options**: Realistic targets from Top 20
             - **Remaining slots**: Safe options from other colleges
-            - **Mix branches**: Don't stick to one branch only
+            - **Mix branches**: Don't stick to one branch only in top colleges
             - **Geographic spread**: Consider different districts
             """)
 

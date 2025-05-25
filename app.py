@@ -8,6 +8,7 @@ from datetime import datetime
 from modules.data_loader import load_data
 from modules.constants import TOP_COLLEGES
 from pagess import college_predictor, phase_comparison, branch_analysis, college_branches, college_search, web_options_generator, college_specific_generator, best_specific_generator
+from modules.constants import TOP_COLLEGES, TOP_COLLEGES__MALES
 
 
 # Configure logging
@@ -21,8 +22,6 @@ st.set_page_config(page_title="TS EAMCET 2025 College Predictor",
 
 
 def create_footer():
-    ist = pytz.timezone('Asia/Kolkata')
-    current_time = datetime.now(ist).strftime("%I:%M %p IST on %A, %B %d, %Y")
 
     st.markdown("---")
     col1, col2 = st.columns([2, 2])
@@ -65,12 +64,6 @@ def create_footer():
     # )
 
     st.markdown("---")
-    st.caption(
-        "**Note**: This predictor uses TS EAMCET 2024 cutoff ranks. Actual admissions may vary due to special categories, dropouts, or spot admissions. Data sourced from TGEAPCET 2024 Last Rank Statement."
-    )
-    st.caption(
-        f"**Last Updated:** {current_time}  \n"
-    )
 
 
 def main():
@@ -137,25 +130,6 @@ def main():
     # Adding footer
     # Add the footer at the end of your app
     create_footer()
-    st.markdown("---")
-    # col1, col2 = st.columns([2, 2])
-
-    # with col1:
-
-    #     st.markdown(
-    #         "📚 **Find More Student Content:**\n"
-    #         "[![LearnwithGoutham](https://img.shields.io/badge/LearnwithGoutham-darkred?logo=youtube)](https://www.youtube.com/@LearnwithGoutham) "
-    #         "[![Goutham](https://img.shields.io/badge/Goutham-purple?logo=instagram)](https://instagram.com/gouthamsankeerth) "
-    #         "[![Tharun](https://img.shields.io/badge/Tharun-darkorange?logo=youtube)](https://www.youtube.com/@banatharun_74)"
-    #         "  "
-    #         "  "
-    #         "  "
-    #         "  "
-    #         "  "
-    #         "  ""     "
-    #     )
-
-    # with col2:
 
     st.markdown("#### ☕ Support Tharun Work ")
     st.markdown(
@@ -163,18 +137,25 @@ def main():
         If you found this tool helpful, consider supporting me on [RazarPay](https://razorpay.me/@your-razorpay-id)!     Your support helps me keep building and maintaining tools like this ❤️
         """
     )
-    st.info(
-        "💖 **Support This Project**\n"
-        "To help keep the website running and free for everyone:\n"
-        "  "
-        "[Support via Razorpay](https://razorpay.me/@your-razorpay-id)"
-    )
     st.markdown(
         "📚 **Find More Student Content:**\n"
         "[![LearnwithGoutham](https://img.shields.io/badge/LearnwithGoutham-darkred?logo=youtube)](https://www.youtube.com/@LearnwithGoutham) "
         "[![Goutham](https://img.shields.io/badge/Goutham-purple?logo=instagram)](https://instagram.com/gouthamsankeerth) "
         "[![Tharun](https://img.shields.io/badge/Tharun-darkorange?logo=youtube)](https://www.youtube.com/@banatharun_74)"
     )
+    st.info(
+        "💖 **Support This Project**\n"
+        "To help keep the website running and free for everyone:\n"
+        "  "
+        "[Support via Razorpay](https://razorpay.me/@your-razorpay-id)"
+    )
+    st.success("""
+    ✅ **Why Use This Tool?**
+    - Save time by exploring the **most probable and optimal combinations**
+    - Make informed decisions based on **rank-wise insights**
+    - Avoid common mistakes in web option ordering
+    - Use expert patterns to get closer to your dream seat
+    """)
 
     st.warning("""
         ⚠️ **Disclaimer**  
@@ -187,6 +168,23 @@ def main():
 
         👉 Please use this tool as a **reference**, not as your final choice list.
         Always verify with official TS EAMCET counseling notifications and guidelines.""")
+
+    ist = pytz.timezone('Asia/Kolkata')
+    current_time = datetime.now(ist).strftime("%I:%M %p IST on %A, %B %d, %Y")
+    st.info(
+            "Note: Due to changes in local and non-local quota policies for TS EAPCET 2025, cutoff ranks may increase significantly compared to previous years. For example, a 1000 rank in 2024 may correspond to a 1500–2000 rank in 2025. Please consider this while selecting your web options, as actual ranks may vary. ALL THE BEST! 😊"
+        )
+    st.caption(
+        "**Note**: This predictor uses TS EAMCET 2024 cutoff ranks. Actual admissions may vary due to special categories, dropouts, or spot admissions. Data sourced from TGEAPCET 2024 Last Rank Statement."
+    )
+
+    st.caption(
+        f"**Last Updated:** {current_time}  \n"
+    )
+
+    st.markdown("""
+    # ALL THE BEST FOR YOUR **NEXTSTEP** OF YOUR JOURNEY!😊🎉
+    """)
 
 
 def render_help_tab():
@@ -202,8 +200,8 @@ def render_help_tab():
     """)
 
     st.subheader("🆘 Help & Information")
-    st.markdown("""
-    ### 🚀 How to Use This Tool
+    st.info("""
+    #### How to Use This Tool
 
     #### 1. **College Predictor Tab**
     - Enter your **TS EAMCET rank**, **gender**, **category (caste)**, and **preferred branch**.
@@ -273,6 +271,21 @@ def render_help_tab():
     - Special category seats (e.g., Sports, PH, NCC, CAP) are **not included** in general cutoff ranks.
     - The **Web Options Generator** is a strategy assistant — always include some **top colleges**, even if your chances are slim, to maximize outcomes.
 
+    """)
+
+    st.markdown("---")
+    st.subheader(
+        "Top 20 Engineering Colleges in Telangana (Based on Our Expert Analysis)")
+
+    for i, college in enumerate(TOP_COLLEGES__MALES):
+        with st.expander(f"{i+1}. {college['name']}"):
+            st.write(college['details'])
+
+    st.info("""
+    **Note about this list**: 
+    
+    This ranking is based on general market trends, placement records, and academic reputation. 
+    The actual ranking may vary based on specific branches, infrastructure, and other factors.
     """)
 
 

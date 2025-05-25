@@ -222,7 +222,10 @@ def render():
 
         # Branch selection
         st.markdown(
-            "### 🎓 Select Your Preferred Branches (in order of priority)")
+            "### 🎓 Select Your Preferred Branches (Select branches in your order of priority)")
+        st.markdown("""
+        The options will be arranged based on your priority order and your priority list of branches will be displayed below after you click the **Generate Web Options** button.
+        """)
 
         available_branches = list(BRANCH_MAP.keys())
 
@@ -339,7 +342,8 @@ def render():
             with col4:
                 top_college_options = len([opt for opt in web_options if any(
                     top['name'] in opt['College'] for top in TOP_COLLEGES)])
-                st.metric("⭐ Top 20 College Options", top_college_options)
+                st.metric("⭐ Top 20 Colleges Possible options",
+                          top_college_options)
 
             # Results table
             st.markdown("### 📊 Your Personalized Web Options")
@@ -385,24 +389,24 @@ def render():
             )
 
             # Key insights
-            st.markdown("### 🔍 Key Insights & Recommendations")
+            # st.markdown("### 🔍 Key Insights")
 
             # Priority branch analysis
             priority_branches = df_results.groupby(
                 'Branch Code').size().sort_values(ascending=False)
 
-            col1, col2 = st.columns(2)
+            # col1, col2 = st.columns(2)
 
-            with col1:
-                st.markdown("**🎯 Branch-wise Opportunities:**")
-                for branch, count in priority_branches.head(5).items():
-                    st.write(f"• **{branch}**: {count} colleges")
+            # with col1:
+            st.markdown("**🎯 Branch-wise Opportunities:**")
+            for branch, count in priority_branches.head(5).items():
+                st.write(f"• **{branch}**: {count} colleges")
 
-            with col2:
-                st.markdown("**⭐ Top College Matches:**")
-                top_matches = [opt for opt in web_options[:5]]
-                for opt in top_matches:
-                    st.write(f"• {opt['College']} - {opt['Branch Code']}")
+            # with col2:
+            #     st.markdown("**⭐ Top College Matches:**")
+            #     top_matches = [opt for opt in web_options[:5]]
+            #     for opt in top_matches:
+            #         st.write(f"• {opt['College']} - {opt['Branch Code']}")
 
             # Important notes
             st.markdown("### 📝 Important Notes")
