@@ -106,13 +106,13 @@ def main():
 
     # Web Options Best Possible Generator Tab (New)
     with tabs[3]:
-        # best_specific_generator.render()
-        st.subheader("Web Options Best Possible Generator")
-        st.markdown(
-            "This feature is under development. Stay tuned for updates!"
-        )
-        # Placeholder for future implementation
-        st.info("Coming soon! This feature will help you find the best possible web options based on your preferences.")
+        best_specific_generator.render()
+        # st.subheader("Web Options Best Possible Generator")
+        # st.markdown(
+        #     "This feature is under development. Stay tuned for updates!"
+        # )
+        # # Placeholder for future implementation
+        # st.info("Coming soon! This feature will help you find the best possible web options based on your preferences.")
 
     # College-wise Branches Tab
     with tabs[4]:
@@ -174,87 +174,105 @@ def main():
         "[![LearnwithGoutham](https://img.shields.io/badge/LearnwithGoutham-darkred?logo=youtube)](https://www.youtube.com/@LearnwithGoutham) "
         "[![Goutham](https://img.shields.io/badge/Goutham-purple?logo=instagram)](https://instagram.com/gouthamsankeerth) "
         "[![Tharun](https://img.shields.io/badge/Tharun-darkorange?logo=youtube)](https://www.youtube.com/@banatharun_74)"
-        "  "
-        "  "
-        "  "
-        "  "
-        "  "
-        "  ""     "
     )
+
+    st.warning("""
+        ⚠️ **Disclaimer**  
+        This is a **strategy reference tool**, not a guaranteed admission predictor.
+
+        - We are **not responsible** for any admission, seat allocation, or counseling-related issues.
+        - This tool is intended to serve as **guidance only**, not as a final decision-maker.
+        - All recommendations are based on **available data** and **algorithms we have developed**.
+        - Final allotments depend on official **counseling processes**, **cutoffs**, **seat availability**, and **your personal choices**.
+
+        👉 Please use this tool as a **reference**, not as your final choice list.
+        Always verify with official TS EAMCET counseling notifications and guidelines.""")
 
 
 def render_help_tab():
-    """Render the Help tab content."""
-    st.markdown("""
-    **Note**: This predictor uses TS EAMCET 2024 cutoff ranks. Actual admissions may vary
-    due to special categories, dropouts, or spot admissions. Data sourced from TGEAPCET 2024 Last Rank Statement.
-    """)
-    st.subheader("Help & Information")
-    st.markdown("""
-    ### How to Use This Tool
-    
-    1. **College Predictor Tab**:
-       - Enter your TS EAMCET rank, gender, caste, and preferred branch
-       - Select which phase data you want to use (Final is recommended for accuracy)
-       - Optionally filter by district to find colleges in specific areas
-       - Click "Predict Colleges" to see your eligible options
-    
-    2. ** Web Options Generator Tab** (NEW):
-       - Enter your rank, gender, and category
-       - Select your preferred branches in order of priority
-       - Set a safety buffer for better chances
-       - Get a strategic list of college-branch combinations optimized for web option filling
-       - Download your personalized list as CSV
-                
-    3. **Web Options College Specific Generator Tab** (NEW):
-       - Enter your rank and get options to get seat in top 20 colleges(our focus and data based  too)
-       - Get a list of branches in that college with their cutoffs  
-       - Download the list for easy reference during web options filling
-                
-    4. **Web Options Best Possible Generator Tab** (NEW):
-       - Enter your rank and get the best possible web options based on your preferences
-       - This feature is under development and will be available soon!
-       - Get a list of branches in that college with their cutoffs
-                
-    5. **College-wise Branches Tab**:
-       - View all branches and their cutoffs for a specific college
-       - Compare the difficulty level of different branches within the same institution
-       - See the list of top 20 colleges based on market trends
-    
-    6. **College Search by Branch Tab**:
-       - Enter your desired branch, caste, and gender to find colleges offering that branch
-       - Use the 'N/A' option for caste to see closing ranks across all categories
-       - View additional details like fees, place, and district for each college
-    
-    7. **Phase Comparison Tab**:
-       - Compare how college cutoffs change across different counseling phases
-       - This helps you understand if waiting for later rounds might improve your options
-    
-    8. **Branch Analysis Tab**:
-       - Analyze which branches have higher or lower cutoff ranks
-       - Useful for exploring alternative branches if your desired one is too competitive
+    """Render the Help tab content for the TS EAMCET 2024 College Predictor and Web Options Tool."""
 
-    ### Understanding the Results
-    
-    - **Closing Rank**: The last rank that got admission in that college/branch in 2024
-    - **Your eligibility**: If your rank is equal to or better (lower number) than the closing rank, you likely qualify
-    - **Web Options**: Strategic combinations prioritized by your preferences and admission chances
-    
-    ### Web Options Generator - Special Features
-    
-    - **Priority-based Selection**: Results are ordered by your branch preferences
-    - **Safety Buffer**: Adds extra ranks to cutoffs for better admission chances
-    - **Top 20 Focus**: Prioritizes renowned colleges for maximum opportunities
-    - **Smart Filtering**: Balances good chances with stretch options
-    - **Download Feature**: Export your list for easy web option filling
-    
-    ### Important Notes
-    
-    - This tool uses historical data from TS EAMCET 2024
-    - Actual 2025 cutoffs may vary based on seat availability, number of applicants, etc.
-    - Always verify information with official TS EAMCET counseling notifications
-    - Special category seats (sports, PH, CAP, etc.) have different cutoffs not reflected here
-    - The Web Options Generator is a strategic tool - always include top colleges even if chances seem low
+    st.markdown("""
+    ### 📌 Disclaimer
+    This tool is based on the **TS EAMCET 2024 cutoff ranks** published in the TGEAPCET 2024 Last Rank Statement. 
+    Please note that actual admissions may vary due to:
+    - Special category reservations (PH, CAP, NCC, Sports, etc.)
+    - Management quotas and spot admissions
+    - Student withdrawals and internal college policies
+    """)
+
+    st.subheader("🆘 Help & Information")
+    st.markdown("""
+    ### 🚀 How to Use This Tool
+
+    #### 1. **College Predictor Tab**
+    - Enter your **TS EAMCET rank**, **gender**, **category (caste)**, and **preferred branch**.
+    - Choose the counseling phase (✅ *Final phase is recommended for most accurate predictions*).
+    - Filter by **district** (optional).
+    - Click **"Predict Colleges"** to get a list of eligible colleges and branches.
+
+    #### 2. **Web Options Branch Specific Generator Tab**
+    - Input your **rank, gender, and category**.
+    - Select your **preferred branches in priority order**.
+    - Set a **safety buffer** (e.g., +300 ranks) to increase chances of admission.
+    - Receive a **customized, strategic list** of college-branch combinations.
+    - Download the result as a **CSV** for easy web options entry.
+
+    #### 3. **Web Options - College Specific Generator Tab**
+    - Enter your **rank**.
+    - View **branches available in top 20 colleges** based on our focused data.
+    - Download the list for reference during the web options process.
+
+    #### 4. **Web Options - Best Possible Generator Tab** 
+    - Get **personalized suggestions** for the best possible college-branch combinations.
+    - Leverages your preferences and rank to optimize admission chances.
+
+    #### 5. **College-wise Branches Tab**
+    - Select any college to view **all its offered branches** and their **cutoff ranks**.
+    - Easily compare difficulty levels of different departments within a single college.
+    - View insights on the **top 20 colleges** based on trends and demand.
+
+    #### 6. **College Search by Branch Tab**
+    - Search for colleges offering your **preferred branch**.
+    - Customize the search by **gender** and **caste** (or use ‘N/A’ to view all categories).
+    - See additional data like **location, district, and tuition fees**.
+
+    #### 7. **Phase Comparison Tab**
+    - Track how cutoff ranks change across **different counseling phases**.
+    - Helps in deciding whether to wait for later rounds or lock in early.
+
+    #### 8. **Branch Analysis Tab**
+    - Explore which branches have **higher or lower competition**.
+    - Ideal for discovering **alternative branches** with better admission chances.
+
+    ---
+
+    ### 🧠 Understanding Your Results
+
+    - **Closing Rank**: The last rank admitted for a specific branch in 2024.
+    - **Eligibility**: If your rank is **equal to or better (lower)** than the closing rank, you have a good chance of admission.
+    - **Web Options List**: Ordered based on your preferences, safety buffer, and strategic fit.
+
+    ---
+
+    ### 🧰 Web Options Generator – Key Features
+
+    - ✅ **Priority-Based Output**: College-branch options arranged by your chosen branch order.
+    - 🎯 **Safety Buffer**: Adds a margin to cutoff ranks for safer predictions.
+    - 🏆 **Top College Focus**: Emphasizes top 20 reputed institutions for best outcomes.
+    - 🧠 **Smart Filtering**: Balances ambitious choices with realistic chances.
+    - 📥 **Download Option**: Export your personalized list for direct use in web counseling.
+
+    ---
+
+    ### ⚠️ Important Notes
+
+    - This tool uses **TS EAMCET 2024** data for estimation purposes only.
+    - **2025 cutoffs may vary** based on the number of applicants, category-wise competition, and seat availability.
+    - Always verify with the **official TS EAMCET counseling notifications**.
+    - Special category seats (e.g., Sports, PH, NCC, CAP) are **not included** in general cutoff ranks.
+    - The **Web Options Generator** is a strategy assistant — always include some **top colleges**, even if your chances are slim, to maximize outcomes.
+
     """)
 
 

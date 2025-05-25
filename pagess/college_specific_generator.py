@@ -159,23 +159,9 @@ def get_college_specific_options(gender, caste, phase="Final Phase", list_type="
 
 def render():
     """Render the Enhanced College-Specific Options Generator page."""
-    st.subheader("🏛️ Web Options College-Specific Generator")
+    st.subheader("🎯 Web Options College-Specific Generator")
     st.markdown("""
     **Priority: College over Branch - Get into ANY branch of Top colleges!**
-    
-    This tool is perfect if you:
-    - Want to get into a prestigious college regardless of branch
-    - Believe college reputation matters more than specific branch
-    - Are flexible with branch selection
-    - Want to see ALL opportunities in top colleges and beyond
-    """)
-
-    # Information box
-    st.info("""
-    🎯 **New Feature**: Choose from different Top 20 college rankings!
-    - **Manual Ranking**: Our curated list based on overall reputation
-    - **Cutoff-Based**: Ranked by historical cutoff data (most competitive first)
-    - **Gender-Specific**: Optimized rankings considering gender-specific trends
     """)
 
     # Input form
@@ -197,7 +183,7 @@ def render():
             )
 
         # College list type selection
-        st.markdown("### 🏆 Choose Your Top 20 College Ranking Method")
+        st.markdown("#### 🏆 Choose Your Top 20 College Ranking Method")
         list_type = st.radio(
             "Select ranking method:",
             [
@@ -227,7 +213,7 @@ def render():
 
         # Optional rank input for highlighting
         st.markdown(
-            "### 🎯 Optional: Enter your rank for highlighting your chances")
+            "####  Optional: Enter your rank for highlighting your chances")
         user_rank = st.number_input(
             "Your TS EAMCET Rank (Optional)",
             min_value=1,
@@ -671,3 +657,10 @@ def get_ranking_methods_info():
             "methodology": "Statistical analysis of gender-specific admission data and success rates"
         }
     }
+    # Information box
+    st.info("""
+    🎯 **New Feature**: Choose from different Top 20 college rankings!
+    - **Manual Ranking**: Our curated list based on overall reputation
+    - **Cutoff-Based**: Ranked by historical cutoff data (most competitive first)
+    - **Gender-Specific**: Optimized rankings considering gender-specific trends
+    """)

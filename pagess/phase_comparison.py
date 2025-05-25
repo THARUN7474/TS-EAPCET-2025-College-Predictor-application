@@ -5,6 +5,7 @@ import streamlit as st
 from modules.constants import BRANCH_MAP
 from modules.college_predictor import compare_phases
 
+
 def render():
     """Render the Phase Comparison page."""
     st.subheader("Compare Colleges Across Different Phases")
@@ -23,11 +24,12 @@ def render():
 
         with col2:
             comp_caste = st.selectbox("Caste", [
-                                    "OC", "BC_A", "BC_B", "BC_C", "BC_D", "BC_E", "SC", "ST", "EWS"], key="comp_caste")
+                "OC", "BC_A", "BC_B", "BC_C", "BC_D", "BC_E", "SC", "ST", "EWS"], key="comp_caste")
             comp_branch = st.selectbox("Branch", list(
                 BRANCH_MAP.keys()), key="comp_branch")
 
-        compare_button = st.form_submit_button("Compare Phases")
+        compare_button = st.form_submit_button(
+            "Compare Phases", type="primary")
 
     if compare_button:
         if comp_rank < 1:
@@ -46,7 +48,7 @@ def render():
                 for phase, data in phase_comparison.items():
                     st.subheader(f"{phase} Top Colleges")
                     st.dataframe(data, hide_index=True,
-                                use_container_width=True)
+                                 use_container_width=True)
 
                 # Explanation of comparison results
                 st.info("""

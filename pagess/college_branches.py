@@ -7,7 +7,7 @@ import plotly.express as px
 from modules.data_loader import load_data
 from modules.college_predictor import get_college_branches
 from modules.visualizations import create_branch_cutoff_chart, create_branch_comparison_plot
-from modules.constants import TOP_COLLEGES
+from modules.constants import TOP_COLLEGES, TOP_COLLEGES__MALES
 
 
 def render():
@@ -46,7 +46,8 @@ def render():
                                           "BC_D", "BC_E", "SC", "ST", "EWS"],
                                          key="college_caste")
 
-        view_button = st.form_submit_button("View Branch Cutoffs")
+        view_button = st.form_submit_button(
+            "View Branch Cutoffs", type="primary")
 
     if view_button and selected_college:
         with st.spinner("Fetching branch data..."):
@@ -98,13 +99,14 @@ def render():
                 #     - **Most Competitive Branch**: {hardest_branch} (rank: {min_rank:,.0f})
                 #     - **Least Competitive Branch**: {easiest_branch} (rank: {max_rank:,.0f})
                 #     - **Rank Range**: {max_rank - min_rank:,.0f} ranks difference between highest and lowest cutoffs
-                    
+
                 #     These insights help you choose the most suitable branch based on your rank.
                 #     """)
 
                 if 'Closing Rank' in branch_data.columns and 'Branch' in branch_data.columns:
                     st.subheader("Branch Cutoff Comparison")
-                    chart_data = branch_data.set_index('Branch')['Closing Rank']
+                    chart_data = branch_data.set_index('Branch')[
+                        'Closing Rank']
                     st.bar_chart(chart_data)
 
                     st.subheader("Key Insights")
@@ -114,8 +116,10 @@ def render():
                     if not valid_data.empty:
                         min_rank = valid_data['Closing Rank'].min()
                         max_rank = valid_data['Closing Rank'].max()
-                        hardest_branch = valid_data.loc[valid_data['Closing Rank'].idxmin()]['Branch']
-                        easiest_branch = valid_data.loc[valid_data['Closing Rank'].idxmax()]['Branch']
+                        hardest_branch = valid_data.loc[valid_data['Closing Rank'].idxmin(
+                        )]['Branch']
+                        easiest_branch = valid_data.loc[valid_data['Closing Rank'].idxmax(
+                        )]['Branch']
 
                         st.markdown(f"""
                         - **Most Competitive Branch**: {hardest_branch} (rank: {min_rank:,.0f})
@@ -125,16 +129,16 @@ def render():
                         These insights help you choose the most suitable branch based on your rank.
                         """)
                     else:
-                        st.warning("No valid closing rank data available for insights.")
+                        st.warning(
+                            "No valid closing rank data available for insights.")
 
                 # ...existing code...
-
-                    # Top Colleges Section
+                # Top Colleges Section
                 st.markdown("---")
                 st.subheader(
-                    "Top 20 Engineering Colleges in Telangana (Based on Market Trends)")
+                    "Top 20 Engineering Colleges in Telangana (Based on Our Expert Analysis)")
 
-                for i, college in enumerate(TOP_COLLEGES):
+                for i, college in enumerate(TOP_COLLEGES__MALES):
                     with st.expander(f"{i+1}. {college['name']}"):
                         st.write(college['details'])
 

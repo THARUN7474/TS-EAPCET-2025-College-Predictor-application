@@ -158,15 +158,9 @@ def get_web_options(user_rank, gender, caste, preferred_branches, phase="Final P
 
 def render():
     """Render the Web Options Generator page."""
-    st.subheader("🎯 Web Options branch-specific Generator")
+    st.subheader("🎯 Web Options Branch-specific Generator")
     st.markdown("""
-    **Generate optimized college and branch combinations based on your rank and preferences.**
-    
-    This tool helps you create a strategic list of web options by:
-    - Prioritizing your preferred branches in order
-    - Checking Top 20 colleges first for maximum opportunities
-    - Adding a safety buffer to last year's cutoffs
-    - Organizing results by priority for optimal web option filling
+    Generate optimized college and branch combinations based on your rank and preferences. - Prioritizing your preferred branches in order
     """)
 
     # Input form
@@ -188,10 +182,20 @@ def render():
                 help="Your gender for category-specific cutoffs"
             )
 
-            caste = st.selectbox(
-                "Select Category",
-                ["OC", "BC_A", "BC_B", "BC_C", "BC_D", "BC_E", "SC", "ST", "EWS"],
-                help="Your caste category"
+            # College list type selection
+            st.markdown("#### 🏆 Choose Your Top 20 College Ranking Method")
+            list_type = st.radio(
+                "Select ranking method:",
+                [
+                    "Manual Ranking (Our Curated List)",
+                    "Cutoff-Based Ranking (Data-Driven)",
+                    # "Gender-Specific Ranking"
+                ],
+                help="""
+                - **Manual Ranking**: OUR Hand-picked based on reputation, placements, faculty
+                - **Cutoff-Based**: Ranked by most competitive cutoffs (toughest to get in first)  
+                - **Gender-Specific**: Considers gender-specific admission patterns and success rates
+                """
             )
 
         with col2:
@@ -199,6 +203,12 @@ def render():
                 "Select Phase Data",
                 ["Final Phase", "2nd Phase", "1st Phase"],
                 help="Final Phase is recommended for most accurate cutoffs"
+            )
+
+            caste = st.selectbox(
+                "Select Category",
+                ["OC", "BC_A", "BC_B", "BC_C", "BC_D", "BC_E", "SC", "ST", "EWS"],
+                help="Your caste category"
             )
 
             buffer = st.slider(
@@ -209,22 +219,6 @@ def render():
                 step=500,
                 help="Additional ranks added to cutoff for safety margin"
             )
-
-        # College list type selection
-        st.markdown("### 🏆 Choose Your Top 20 College Ranking Method")
-        list_type = st.radio(
-            "Select ranking method:",
-            [
-                "Manual Ranking (Our Curated List)",
-                "Cutoff-Based Ranking (Data-Driven)",
-                # "Gender-Specific Ranking"
-            ],
-            help="""
-            - **Manual Ranking**: Hand-picked based on reputation, placements, faculty
-            - **Cutoff-Based**: Ranked by most competitive cutoffs (toughest to get in first)  
-            - **Gender-Specific**: Considers gender-specific admission patterns and success rates
-            """
-        )
 
         # Branch selection
         st.markdown(
@@ -251,8 +245,10 @@ def render():
             'CSN',  # COMPUTER SCIENCE AND ENGINEERING (NETWORKS)
             'CE',   # COMPUTER ENGINEERING
             'AI',   # ARTIFICIAL INTELLIGENCE
+            'AIM',  # ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING
             'ECE',  # ELECTRONICS AND COMMUNICATION ENGINEERING
-            'EEE'   # ELECTRICAL AND ELECTRONICS ENGINEERING
+            'EEE',   # ELECTRICAL AND ELECTRONICS ENGINEERING
+            'MEC',  # MECHANICAL ENGINEERING
         ]
 
         other_branches = [

@@ -35,7 +35,7 @@ def render():
     selected_gender = st.selectbox(
         "Select Gender", ["Male", "Female"], key="college_search_gender")
 
-    if st.button("Search Colleges"):
+    if st.button("Search Colleges", type="primary"):
         with st.spinner("Searching colleges..."):
             if df is not None:
                 # Filter data by branch

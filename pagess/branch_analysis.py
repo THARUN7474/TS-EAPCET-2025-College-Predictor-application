@@ -22,7 +22,7 @@ def render():
                                 ["Male", "Female"],
                                 key="branch_gender")
 
-    if st.button("Analyze Branches"):
+    if st.button("Analyze Branches", type="primary"):
         with st.spinner("Analyzing branch cutoffs..."):
             # Get data for analysis
             df = load_data("Final Phase")
