@@ -148,6 +148,7 @@ def main():
         "To help keep the website running and free for everyone:\n"
         "  "
         "[Support via Razorpay](https://razorpay.me/@your-razorpay-id)"
+        "Link will be updated soon! 😊"
     )
     st.success("""
     ✅ **Why Use This Tool?**
@@ -172,8 +173,8 @@ def main():
     ist = pytz.timezone('Asia/Kolkata')
     current_time = datetime.now(ist).strftime("%I:%M %p IST on %A, %B %d, %Y")
     st.info(
-            "Note: Due to changes in local and non-local quota policies for TS EAPCET 2025, cutoff ranks may increase significantly compared to previous years. For example, a 1000 rank in 2024 may correspond to a 1500–2000 rank in 2025. Please consider this while selecting your web options, as actual ranks may vary. ALL THE BEST! 😊"
-        )
+        "Note: Due to changes in local and non-local quota policies for TS EAPCET 2025, cutoff ranks may increase significantly compared to previous years. For example, a 1000 rank in 2024 may correspond to a 1500–2000 rank in 2025. Please consider this while selecting your web options, as actual ranks may vary. ALL THE BEST! 😊"
+    )
     st.caption(
         "**Note**: This predictor uses TS EAMCET 2024 cutoff ranks. Actual admissions may vary due to special categories, dropouts, or spot admissions. Data sourced from TGEAPCET 2024 Last Rank Statement."
     )
@@ -183,7 +184,7 @@ def main():
     )
 
     st.markdown("""
-    # ALL THE BEST FOR YOUR **NEXTSTEP** OF YOUR JOURNEY!😊🎉
+    # ALL THE BEST FOR YOUR [**NEXTSTEP**](https://nextstep-student-hub.vercel.app/) OF YOUR JOURNEY!😊🎉
     """)
 
 
