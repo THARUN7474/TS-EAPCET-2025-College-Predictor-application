@@ -105,7 +105,7 @@ def render():
                 # st.subheader("Eligible Colleges")
 
                 st.markdown(
-                    "Download your results in CSV, Excel, or PDF format using the buttons above i suggest you to use CSV or Excel for better formatting and in next update i will add a better UI for PDF")
+                    "Download your results in CSV, Excel, or PDF format using the buttons above I suggest you to Prefer CSV or Excel for better Formated output")
                 # st.markdown("---")
                 st.subheader("Eligible Colleges")
 
