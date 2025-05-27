@@ -104,10 +104,10 @@ def render():
                 #     """)
 
                 if 'Closing Rank' in branch_data.columns and 'Branch' in branch_data.columns:
-                    st.subheader("Branch Cutoff Comparison")
-                    chart_data = branch_data.set_index('Branch')[
-                        'Closing Rank']
-                    st.bar_chart(chart_data)
+                    # st.subheader("Branch Cutoff Comparison")
+                    # chart_data = branch_data.set_index('Branch')[
+                    #     'Closing Rank']
+                    # st.bar_chart(chart_data)
 
                     st.subheader("Key Insights")
                     # Remove rows with NaN in 'Closing Rank'

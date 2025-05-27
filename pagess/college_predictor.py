@@ -71,7 +71,7 @@ def render():
                     f"Found {len(result)} colleges where you may be eligible!")
 
                 # Create three columns for the download buttons
-                col_csv, col_excel, col_pdf = st.columns(3)
+                col_csv, col_excel = st.columns(2)
 
                 with col_csv:
                     csv = result.to_csv(index=False)
@@ -91,21 +91,23 @@ def render():
                         file_name=f"eamcet_colleges_{rank}_{caste}_{branch}.xlsx",
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
-                with col_pdf:
-                    pdf_bytes = dataframe_to_pdf(result)
-                    st.download_button(
-                        label="Download Results as PDF",
-                        data=pdf_bytes,
-                        file_name=f"eamcet_colleges_{rank}_{caste}_{branch}.pdf",
-                        mime="application/pdf"
-                    )
+
+                # with col_pdf:
+                #     pdf_bytes = dataframe_to_pdf(result)
+                #     st.download_button(
+                #         label="Download Results as PDF",
+                #         data=pdf_bytes,
+                #         file_name=f"eamcet_colleges_{rank}_{caste}_{branch}.pdf",
+                #         mime="application/pdf"
+                #     )
 
                 # st.markdown(
                 #     "Download your results in CSV, Excel, or PDF format using the buttons above")
                 # st.subheader("Eligible Colleges")
 
-                st.markdown(
-                    "Download your results in CSV, Excel, or PDF format using the buttons above I suggest you to Prefer CSV or Excel for better Formated output")
+                # st.markdown(
+                #     "Download your results in CSV, Excel")
+                # PDF format using the buttons above I suggest you to Prefer CSV or Excel for better Formated output
                 # st.markdown("---")
                 st.subheader("Eligible Colleges")
 
@@ -126,4 +128,4 @@ def render():
                 )
 
                 # College count by district visualization
-                create_branch_distribution_chart(result)
+                # create_branch_distribution_chart(result)

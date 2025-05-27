@@ -81,7 +81,7 @@ def main():
         "College-wise Branches",
         "College Search by Branch",
         "Phase Comparison",
-        "Branch Analysis",
+        # "Branch Analysis",
         "Help"
     ])
 
@@ -119,12 +119,12 @@ def main():
     with tabs[6]:
         phase_comparison.render()
 
-    # Branch Analysis Tab
-    with tabs[7]:
-        branch_analysis.render()
+    # # Branch Analysis Tab
+    # with tabs[7]:
+    #     branch_analysis.render()
 
     # Help Tab
-    with tabs[8]:
+    with tabs[7]:
         render_help_tab()
 
     # Adding footer
