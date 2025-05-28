@@ -1,61 +1,112 @@
+
 """
-Main entry point for the TS EAMCET 2025 College Predictor application.
+Optimized main entry point for the TS EAMCET 2025 College Predictor application.
+Performance-focused implementation with caching, lazy loading, and session state management.
 """
 import streamlit as st
 import logging
 import pytz
+import time
+import psutil
+import os
 from datetime import datetime
-from modules.data_loader import load_data
-from modules.constants import TOP_COLLEGES
-from pagess import college_predictor, phase_comparison, branch_analysis, college_branches, college_search, web_options_generator, college_specific_generator, best_specific_generator
-from modules.constants import TOP_COLLEGES, TOP_COLLEGES__MALES
+from functools import lru_cache
+from typing import Optional, Dict, Any, Tuple
 
+# ============================================================================
+# PERFORMANCE MONITORING & LOGGING CONFIGURATION
+# ============================================================================
 
-# Configure logging
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+# Configure logging for production (reduced verbosity)
+logging.basicConfig(
+    level=logging.WARNING if os.getenv(
+        'STREAMLIT_ENV') == 'production' else logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
-# Setting page configuration for better appearance
-st.set_page_config(page_title="TS EAMCET 2025 College Predictor",
-                   page_icon="🎓", layout="wide")
+
+class PerformanceMonitor:
+    """Performance monitoring utilities"""
+
+    @staticmethod
+    def start_monitoring() -> Dict[str, Any]:
+        """Start performance monitoring"""
+        try:
+            start_time = time.time()
+            memory_usage = psutil.Process().memory_info().rss / 1024 / 1024  # MB
+            cpu_percent = psutil.cpu_percent(interval=0.1)
+
+            return {
+                'start_time': start_time,
+                'memory_mb': memory_usage,
+                'cpu_percent': cpu_percent
+            }
+        except Exception:
+            return {'start_time': time.time(), 'memory_mb': 0, 'cpu_percent': 0}
+
+    @staticmethod
+    def log_performance(metrics: Dict[str, Any], operation_name: str):
+        """Log performance metrics if concerning"""
+        duration = time.time() - metrics['start_time']
+
+        # Only log performance issues
+        if duration > 2.0 or metrics['memory_mb'] > 500:
+            logger.warning(
+                f"{operation_name}: {duration:.2f}s, {metrics['memory_mb']:.1f}MB, {metrics['cpu_percent']:.1f}% CPU")
+
+        # Show debug metrics in sidebar if enabled
+        if st.session_state.get('show_debug_metrics', False):
+            with st.sidebar:
+                st.metric("⏱️ Load Time", f"{duration:.2f}s")
+                st.metric("💾 Memory", f"{metrics['memory_mb']:.1f}MB")
+                st.metric("🔧 CPU", f"{metrics['cpu_percent']:.1f}%")
+
+# ============================================================================
+# OPTIMIZED DATA LOADING WITH ADVANCED CACHING
+# ============================================================================
 
 
-def create_footer():
+@st.cache_data(ttl=3600, show_spinner="🔄 Loading college data...")
+def load_colleges_data():
+    """Load and cache college data with error handling"""
+    try:
+        from modules.data_loader import load_data
+        data = load_data("Final Phase")
+        if data is None:
+            logger.error("Data loader returned None")
+            return None
+        logger.info("College data loaded successfully")
+        return data
+    except ImportError as e:
+        logger.error(f"Failed to import data_loader module: {e}")
+        return None
+    except Exception as e:
+        logger.error(f"Error loading college data: {e}")
+        return None
 
-    st.markdown("---")
-    col1, col2 = st.columns([2, 2])
-    with col1:
-        st.markdown(
-            """
-            ### 👨‍💻 MADE BY
 
-            **Tharun**  
-            [![GitHub](https://img.shields.io/badge/GitHub-THARUN7474-black?logo=github)](https://github.com/THARUN7474)
-            [![LinkedIn](https://img.shields.io/badge/LinkedIn-Banda%20Tharun-blue?logo=linkedin)](https://www.linkedin.com/in/banda-tharun-47b489214)
-            [![Twitter](https://img.shields.io/badge/Twitter-BandaTharun7-1da1f2?logo=twitter)](https://x.com/BandaTharun7/)
-            [![YouTube](https://img.shields.io/badge/YouTube-BandaTharun-FF0000?logo=youtube&logoColor=white)](https://www.youtube.com/@banatharun_74)
-            """
-        )
+@st.cache_data(ttl=7200)  # Cache for 2 hours
+def get_top_colleges_data() -> Tuple[list, list]:
+    """Cache top colleges lists"""
+    try:
+        from modules.constants import TOP_COLLEGES, TOP_COLLEGES__MALES
+        return TOP_COLLEGES, TOP_COLLEGES__MALES
+    except ImportError as e:
+        logger.error(f"Failed to import constants: {e}")
+        return [], []
 
-    with col2:
-        st.markdown(
-            """
-            ### 🙎‍♂️ With Support
 
-            **Goutham**  
-            [![Instagram](https://img.shields.io/badge/Instagram-gouthamsankeerth-purple?logo=instagram)](https://instagram.com/gouthamsankeerth)
-            [![YouTube](https://img.shields.io/badge/YouTube-LearnwithGoutham-red?logo=youtube)](https://www.youtube.com/@LearnwithGoutham)
-            [![Telegram](https://img.shields.io/badge/Telegram-gouthamsankeerth-2CA5E0?logo=telegram)](https://t.me/careerguidance_gouthamsankeerth)
-            """
-        )
-    # st.info(
-    #     "Support This Project(for website maintenance): [Donate via Razorpay](https://razorpay.me/@your-razorpay-id)"
-    # )
+@st.cache_data(ttl=60)  # Cache for 1 minute to avoid constant time updates
+def get_current_time_ist() -> str:
+    """Get current IST time (cached)"""
+    ist = pytz.timezone('Asia/Kolkata')
+    return datetime.now(ist).strftime("%I:%M %p IST on %A, %B %d, %Y")
 
-    # # Optional: Add BuyMeACoffee Button
+
+# Optional: Add BuyMeACoffee Button
     # st.markdown(
-    #     """
+    # """
     #     <a href="https://www.buymeacoffee.com/bandatharun74" target="_blank">
     #         <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me a Coffee" height="60">
     #     </a>
@@ -63,232 +114,459 @@ def create_footer():
     #     unsafe_allow_html=True,
     # )
 
-    st.markdown("---")
+@st.cache_data(ttl=86400)  # Cache for 24 hours
+def get_static_content() -> Dict[str, str]:
+    """Cache all static content"""
+    return {
+        'footer_tharun': """
+        ### 👨‍💻 MADE BY
+        **Tharun**  
+        [![GitHub](https://img.shields.io/badge/GitHub-THARUN7474-black?logo=github)](https://github.com/THARUN7474)
+        [![LinkedIn](https://img.shields.io/badge/LinkedIn-Banda%20Tharun-blue?logo=linkedin)](https://www.linkedin.com/in/banda-tharun-47b489214)
+        [![Twitter](https://img.shields.io/badge/Twitter-BandaTharun7-1da1f2?logo=twitter)](https://x.com/BandaTharun7/)
+        [![YouTube](https://img.shields.io/badge/YouTube-BandaTharun-FF0000?logo=youtube&logoColor=white)](https://www.youtube.com/@banatharun_74)
+        """,
+        'footer_goutham': """
+        ### 🙎‍♂️ With Support
+        **Goutham**  
+        [![Instagram](https://img.shields.io/badge/Instagram-gouthamsankeerth-purple?logo=instagram)](https://instagram.com/gouthamsankeerth)
+        [![YouTube](https://img.shields.io/badge/YouTube-LearnwithGoutham-red?logo=youtube)](https://www.youtube.com/@LearnwithGoutham)
+        [![Telegram](https://img.shields.io/badge/Telegram-gouthamsankeerth-2CA5E0?logo=telegram)](https://t.me/careerguidance_gouthamsankeerth)
+        """,
+        'help_content': """
+        ### 📌 Disclaimer
+        This tool is based on the **TS EAMCET 2024 cutoff ranks** published in the TGEAPCET 2024 Last Rank Statement.
+        
+        #### How to Use This Tool
+        1. **College Predictor Tab**: Enter rank, gender, category, and preferred branch
+        2. **Web Options Generator**: Get strategic college-branch combinations
+        3. **College Search**: Find colleges by branch or location
+        """,
+        'support_message': """
+        #### ☕ Support Tharun's Work 
+        If you found this tool helpful, consider supporting me on [RazorPay](https://razorpay.me/@your-razorpay-id)! 
+        Your support helps me keep building and maintaining tools like this ❤️
 
-
-def main():
-    """Main function to run the Streamlit application."""
-    logger.info("Starting TS EAMCET 2025 College Predictor application")
-
-    st.title("🎓 TS EAMCET 2025 College Predictor")
-
-    # Tabs for different functionalities
-    tabs = st.tabs([
-        "College Predictor",
-        "Web Options branch_specific",  # New tab
-        "Web Options college_specific",  # New tab
-        "Web Options best_possible",  # New tab
-        "College-wise Branches",
-        "College Search by Branch",
-        "Phase Comparison",
-        # "Branch Analysis",
-        "Help"
-    ])
-
-    # College Predictor Tab
-    with tabs[0]:
-        college_predictor.render()
-
-    # Web Options Generator Tab (New)
-    with tabs[1]:
-        web_options_generator.render()
-
-    # Web Options College Specific Generator Tab (New)
-    with tabs[2]:
-        college_specific_generator.render()
-
-    # Web Options Best Possible Generator Tab (New)
-    with tabs[3]:
-        best_specific_generator.render()
-        # st.subheader("Web Options Best Possible Generator")
-        # st.markdown(
-        #     "This feature is under development. Stay tuned for updates!"
-        # )
-        # # Placeholder for future implementation
-        # st.info("Coming soon! This feature will help you find the best possible web options based on your preferences.")
-
-    # College-wise Branches Tab
-    with tabs[4]:
-        college_branches.render()
-
-    # College Search by Branch Tab
-    with tabs[5]:
-        college_search.render()
-
-    # Phase Comparison Tab
-    with tabs[6]:
-        phase_comparison.render()
-
-    # # Branch Analysis Tab
-    # with tabs[7]:
-    #     branch_analysis.render()
-
-    # Help Tab
-    with tabs[7]:
-        render_help_tab()
-
-    # Adding footer
-    # Add the footer at the end of your app
-    create_footer()
-
-    st.markdown("#### ☕ Support Tharun Work ")
-    st.markdown(
-        """
-        If you found this tool helpful, consider supporting me on [RazarPay](https://razorpay.me/@your-razorpay-id)!     Your support helps me keep building and maintaining tools like this ❤️
-        """
-    )
-    st.markdown(
-        "📚 **Find More Student Content:**\n"
-        "[![LearnwithGoutham](https://img.shields.io/badge/LearnwithGoutham-darkred?logo=youtube)](https://www.youtube.com/@LearnwithGoutham) "
-        "[![Goutham](https://img.shields.io/badge/Goutham-purple?logo=instagram)](https://instagram.com/gouthamsankeerth) "
-        "[![Tharun](https://img.shields.io/badge/Tharun-darkorange?logo=youtube)](https://www.youtube.com/@banatharun_74)"
-    )
-    st.info(
-        "💖 **Support This Project**\n"
-        "To help keep the website running and free for everyone:\n"
-        "  "
-        "[Support via Razorpay](https://razorpay.me/@your-razorpay-id)"
-        "Link will be updated soon! 😊"
-    )
-    st.success("""
-    ✅ **Why Use This Tool?**
-    - Save time by exploring the **most probable and optimal combinations**
-    - Make informed decisions based on **rank-wise insights**
-    - Avoid common mistakes in web option ordering
-    - Use expert patterns to get closer to your dream seat
-    """)
-
-    st.warning("""
+        """,
+        'social_links': """
+        📚 **Find More Student Content:**
+        [![LearnwithGoutham](https://img.shields.io/badge/LearnwithGoutham-darkred?logo=youtube)](https://www.youtube.com/@LearnwithGoutham) 
+        [![Goutham](https://img.shields.io/badge/Goutham-purple?logo=instagram)](https://instagram.com/gouthamsankeerth) 
+        [![Tharun](https://img.shields.io/badge/Tharun-darkorange?logo=youtube)](https://www.youtube.com/@banatharun_74)
+        """,
+        'disclaimer_content': """
         ⚠️ **Disclaimer**  
         This is a **strategy reference tool**, not a guaranteed admission predictor.
-
         - We are **not responsible** for any admission, seat allocation, or counseling-related issues.
         - This tool is intended to serve as **guidance only**, not as a final decision-maker.
         - All recommendations are based on **available data** and **algorithms we have developed**.
-        - Final allotments depend on official **counseling processes**, **cutoffs**, **seat availability**, and **your personal choices**.
+        - Final allotments depend on official **counseling processes** and **your personal choices**.
+        👉 Please use this tool as a **reference**, not as your final choice list. Always verify with official TS EAMCET counseling notifications and guidelines.
+        """,
+        'benefits_content': """
+        ✅ **Why Use This Tool?**
+        - Save time by exploring the **most probable and optimal combinations**
+        - Make informed decisions based on **rank-wise insights**
+        - Avoid common mistakes in web option ordering
+        - Use expert patterns to get closer to your dream seat
+        """
+    }
 
-        👉 Please use this tool as a **reference**, not as your final choice list.
-        Always verify with official TS EAMCET counseling notifications and guidelines.""")
-
-    ist = pytz.timezone('Asia/Kolkata')
-    current_time = datetime.now(ist).strftime("%I:%M %p IST on %A, %B %d, %Y")
-    st.info(
-        "Note: Due to changes in local and non-local quota policies for TS EAPCET 2025, cutoff ranks may increase significantly compared to previous years. For example, a 1000 rank in 2024 may correspond to a 1500–2000 rank in 2025. Please consider this while selecting your web options, as actual ranks may vary. ALL THE BEST! 😊"
-    )
-    st.caption(
-        "**Note**: This predictor uses TS EAMCET 2024 cutoff ranks. Actual admissions may vary due to special categories, dropouts, or spot admissions. Data sourced from TGEAPCET 2024 Last Rank Statement."
-    )
-
-    st.caption(
-        f"**Last Updated:** {current_time}  \n"
-    )
-
-    st.markdown("""
-    # ALL THE BEST FOR YOUR [**NEXTSTEP**](https://nextstep-student-hub.vercel.app/) OF YOUR JOURNEY!😊🎉
-    """)
+# ============================================================================
+# OPTIMIZED SESSION STATE MANAGEMENT
+# ============================================================================
 
 
-def render_help_tab():
-    """Render the Help tab content for the TS EAMCET 2024 College Predictor and Web Options Tool."""
+class SessionManager:
+    """Manage session state efficiently"""
 
-    st.markdown("""
-    ### 📌 Disclaimer
-    This tool is based on the **TS EAMCET 2024 cutoff ranks** published in the TGEAPCET 2024 Last Rank Statement. 
-    Please note that actual admissions may vary due to:
-    - Special category reservations (PH, CAP, NCC, Sports, etc.)
-    - Management quotas and spot admissions
-    - Student withdrawals and internal college policies
-    """)
+    @staticmethod
+    def initialize():
+        """Initialize session state variables once"""
+        if 'app_initialized' not in st.session_state:
+            # Core app state
+            st.session_state.app_initialized = True
+            st.session_state.page_configured = False
 
-    st.subheader("🆘 Help & Information")
+            # Performance settings
+            st.session_state.show_debug_metrics = False
+            st.session_state.show_footer_expanded = False
+
+            # Data loading state
+            st.session_state.data_loaded = False
+            st.session_state.colleges_data = None
+            st.session_state.loading_error = None
+
+            # UI state
+            st.session_state.current_active_tab = 0
+            st.session_state.help_sections_expanded = False
+
+            logger.info("Session state initialized")
+
+    @staticmethod
+    def ensure_data_loaded() -> bool:
+        """Ensure data is loaded, load if necessary"""
+        if not st.session_state.get('data_loaded', False):
+            try:
+                with st.spinner("🔄 Loading college data..."):
+                    st.session_state.colleges_data = load_colleges_data()
+
+                if st.session_state.colleges_data is None:
+                    st.session_state.loading_error = "Failed to load college data"
+                    return False
+
+                st.session_state.data_loaded = True
+                st.session_state.loading_error = None
+                return True
+
+            except Exception as e:
+                st.session_state.loading_error = f"Error loading data: {str(e)}"
+                logger.error(f"Data loading error: {e}")
+                return False
+
+        return True
+
+    @staticmethod
+    def handle_data_error():
+        """Handle data loading errors gracefully"""
+        error_msg = st.session_state.get('loading_error')
+        if error_msg:
+            st.error(f"⚠️ {error_msg}")
+            if st.button("🔄 Retry Loading Data"):
+                st.session_state.data_loaded = False
+                st.session_state.loading_error = None
+                st.rerun()
+
+# ============================================================================
+# LAZY LOADING MODULE IMPORTS
+# ============================================================================
+
+
+class LazyModuleLoader:
+    """Lazy load modules only when needed"""
+
+    _modules = {}
+
+    @classmethod
+    def get_module(cls, module_name: str):
+        """Get module with lazy loading and caching"""
+        if module_name not in cls._modules:
+            try:
+                if module_name == 'college_predictor':
+                    from pagess import college_predictor
+                    cls._modules[module_name] = college_predictor
+                elif module_name == 'web_options_generator':
+                    from pagess import web_options_generator
+                    cls._modules[module_name] = web_options_generator
+                elif module_name == 'college_specific_generator':
+                    from pagess import college_specific_generator
+                    cls._modules[module_name] = college_specific_generator
+                elif module_name == 'best_specific_generator':
+                    from pagess import best_specific_generator
+                    cls._modules[module_name] = best_specific_generator
+                elif module_name == 'college_branches':
+                    from pagess import college_branches
+                    cls._modules[module_name] = college_branches
+                elif module_name == 'college_search':
+                    from pagess import college_search
+                    cls._modules[module_name] = college_search
+                elif module_name == 'phase_comparison':
+                    from pagess import phase_comparison
+                    cls._modules[module_name] = phase_comparison
+                #     # # Branch Analysis Tab
+                #     # with tabs[7]:
+                #     #     branch_analysis.render()
+                else:
+                    logger.warning(f"Unknown module: {module_name}")
+                    return None
+
+            except ImportError as e:
+                logger.error(f"Failed to import {module_name}: {e}")
+                return None
+
+        return cls._modules.get(module_name)
+
+    @classmethod
+    def render_module(cls, module_name: str) -> bool:
+        """Render module with error handling"""
+        module = cls.get_module(module_name)
+        if module and hasattr(module, 'render'):
+            try:
+                module.render()
+                return True
+            except Exception as e:
+                st.error(f"Error rendering {module_name}: {str(e)}")
+                logger.error(f"Error in {module_name}: {e}")
+                return False
+        else:
+            st.error(
+                f"Module {module_name} not available or missing render method")
+            return False
+
+# ============================================================================
+# OPTIMIZED UI COMPONENTS
+# ============================================================================
+
+
+def create_optimized_footer():
+    """Create footer with cached content and collapsible design"""
+    if not st.session_state.get('show_footer_expanded', False):
+        with st.expander("👥 About the Developers", expanded=False):
+            content = get_static_content()
+            col1, col2 = st.columns([1, 1])
+
+            with col1:
+                st.markdown(content['footer_tharun'])
+
+            with col2:
+                st.markdown(content['footer_goutham'])
+
+
+def render_support_section():
+    """Render optimized support section with cached content"""
+    content = get_static_content()
+
+    st.markdown(content['support_message'])
+    st.markdown(content['social_links'])
+
+    # Support info
     st.info("""
-    #### How to Use This Tool
+    💖 **Support This Project**
+    To help keep the website running and free for everyone:
+    [Support via Razorpay](https://razorpay.me/@your-razorpay-id)
+    Link will be updated soon! 😊
+    """)
 
-    #### 1. **College Predictor Tab**
-    - Enter your **TS EAMCET rank**, **gender**, **category (caste)**, and **preferred branch**.
-    - Choose the counseling phase (✅ *Final phase is recommended for most accurate predictions*).
-    - Filter by **district** (optional).
-    - Click **"Predict Colleges"** to get a list of eligible colleges and branches.
+    # Benefits and disclaimer in expandable sections
+    col1, col2 = st.columns([1, 1])
 
-    #### 2. **Web Options Branch Specific Generator Tab**
-    - Input your **rank, gender, and category**.
-    - Select your **preferred branches in priority order**.
-    - Set a **safety buffer** (e.g., +300 ranks) to increase chances of admission.
-    - Receive a **customized, strategic list** of college-branch combinations.
-    - Download the result as a **CSV** for easy web options entry.
+    with col1:
+        with st.expander("✅ Tool Benefits"):
+            st.success(content['benefits_content'])
 
-    #### 3. **Web Options - College Specific Generator Tab**
-    - Enter your **rank**.
-    - View **branches available in top 20 colleges** based on our focused data.
-    - Download the list for reference during the web options process.
+    with col2:
+        with st.expander("⚠️ Important Disclaimer"):
+            st.warning(content['disclaimer_content'])
 
-    #### 4. **Web Options - Best Possible Generator Tab** 
-    - Get **personalized suggestions** for the best possible college-branch combinations.
-    - Leverages your preferences and rank to optimize admission chances.
 
-    #### 5. **College-wise Branches Tab**
-    - Select any college to view **all its offered branches** and their **cutoff ranks**.
-    - Easily compare difficulty levels of different departments within a single college.
-    - View insights on the **top 20 colleges** based on trends and demand.
+def render_help_tab_optimized():
+    """Optimized help tab with better organization"""
+    st.subheader("🆘 Help & Information")
+    st.markdown("""
+        ### 📌 Disclaimer
+        This tool is based on the **TS EAMCET 2024 cutoff ranks** published in the TGEAPCET 2024 Last Rank Statement.
+        Please note that actual admissions may vary due to:
+        - Special category reservations (PH, CAP, NCC, Sports, etc.)
+        - Management quotas and spot admissions
+        - Student withdrawals and internal college policies
+    """)
 
-    #### 6. **College Search by Branch Tab**
-    - Search for colleges offering your **preferred branch**.
-    - Customize the search by **gender** and **caste** (or use ‘N/A’ to view all categories).
-    - See additional data like **location, district, and tuition fees**.
+    content = get_static_content()
 
-    #### 7. **Phase Comparison Tab**
-    - Track how cutoff ranks change across **different counseling phases**.
-    - Helps in deciding whether to wait for later rounds or lock in early.
+    # Main help content
+    with st.expander("📖 How to Use This Tool", expanded=True):
+        st.markdown(content['help_content'])
 
-    #### 8. **Branch Analysis Tab**
-    - Explore which branches have **higher or lower competition**.
-    - Ideal for discovering **alternative branches** with better admission chances.
+        st.markdown("""
+    ### 🚀 Detailed Instructions:
 
     ---
 
-    ### 🧠 Understanding Your Results
-
-    - **Closing Rank**: The last rank admitted for a specific branch in 2024.
-    - **Eligibility**: If your rank is **equal to or better (lower)** than the closing rank, you have a good chance of admission.
-    - **Web Options List**: Ordered based on your preferences, safety buffer, and strategic fit.
+    #### **1. College Predictor Tab**
+    - Enter your **TS EAMCET rank**, **gender**, **category**, and **preferred branch**
+    - Choose the **counseling phase** (✅ *Final Phase recommended*)
+    - Optionally filter by **district**
+    - Click **“Predict Colleges”** to see a list of eligible colleges and branches
 
     ---
 
-    ### 🧰 Web Options Generator – Key Features
+    #### **2. Web Options – Branch Specific Generator Tab**
+    - Input your **rank**, **gender**, and **category**
+    - Select your **preferred branches in priority order**
+    - Set a **safety buffer** (e.g., `+300` ranks) to improve your chances
+    - Get a **customized, strategic list** of college-branch combinations
+    - Download the results as a **CSV** for easier entry in the web options form
+
+    ---
+
+    #### **3. Web Options – College Specific Generator Tab**
+    - Enter your **rank**
+    - View branches available in **top 20 colleges**
+    - Download the list for reference during the web options process
+
+    ---
+
+    #### **4. Web Options – Best Possible Generator Tab**
+    - Get **personalized suggestions** for the best possible college-branch matches
+    - Uses your **preferences** and **rank** to optimize your admission chances
+
+    ---
+
+    #### **5. College-wise Branches Tab**
+    - Select any **college** to view all its **offered branches** and their **closing ranks**
+    - Easily compare difficulty levels of departments within a single college
+    - View insights on the **top 20 colleges** based on demand and cutoff trends
+
+    ---
+
+    #### **6. College Search by Branch Tab**
+    - Search for colleges offering your **preferred branch**
+    - Customize the results by **gender** and **category** (or use `N/A` to view all)
+    - View additional info like **location**, **district**, and **tuition fees**
+
+    ---
+
+    #### **7. Phase Comparison Tab**
+    - Compare how **cutoff ranks** change across **different counseling phases**
+    - Helps you decide whether to lock a seat early or wait for later rounds
+
+    ---
+    #### 🧰 Web Options Generator – Key Features
 
     - ✅ **Priority-Based Output**: College-branch options arranged by your chosen branch order.
     - 🎯 **Safety Buffer**: Adds a margin to cutoff ranks for safer predictions.
     - 🏆 **Top College Focus**: Emphasizes top 20 reputed institutions for best outcomes.
     - 🧠 **Smart Filtering**: Balances ambitious choices with realistic chances.
     - 📥 **Download Option**: Export your personalized list for direct use in web counseling.
-
-    ---
-
-    ### ⚠️ Important Notes
-
-    - This tool uses **TS EAMCET 2024** data for estimation purposes only.
-    - **2025 cutoffs may vary** based on the number of applicants, category-wise competition, and seat availability.
-    - Always verify with the **official TS EAMCET counseling notifications**.
-    - Special category seats (e.g., Sports, PH, NCC, CAP) are **not included** in general cutoff ranks.
-    - The **Web Options Generator** is a strategy assistant — always include some **top colleges**, even if your chances are slim, to maximize outcomes.
-
     """)
 
-    st.markdown("---")
-    st.subheader(
-        "Top 20 Engineering Colleges in Telangana (Based on Our Expert Analysis)")
+    with st.expander("⚠️ Important Disclaimers"):
+        st.warning("""
+        - This tool uses **TS EAMCET 2024** data for estimation
+        - **2025 cutoffs may vary** significantly
+        - Always verify with **official TS EAMCET counseling**
+        - Special category seats not included in general cutoffs
+        """)
 
-    for i, college in enumerate(TOP_COLLEGES__MALES):
-        with st.expander(f"{i+1}. {college['name']}"):
-            st.write(college['details'])
+    with st.expander("🏆 Top Engineering Colleges(As per our analysis)"):
+        top_colleges, top_colleges_males = get_top_colleges_data()
 
-    st.info("""
-    **Note about this list**: 
-    
-    This ranking is based on general market trends, placement records, and academic reputation. 
-    The actual ranking may vary based on specific branches, infrastructure, and other factors.
-    """)
+        if top_colleges_males:
+            # Show top 15
+            for i, college in enumerate(top_colleges_males):
+                st.write(
+                    f"**{i+1}.** {college.get('name', 'Unknown College')}")
+        else:
+            st.info("College rankings data not available")
+
+# ============================================================================
+# OPTIMIZED TAB RENDERING WITH LAZY LOADING
+# ============================================================================
+
+
+def render_tabs_optimized():
+    """Render tabs with optimized lazy loading"""
+    tab_configs = [
+        ("College Predictor", "college_predictor"),
+        ("Web Options Branch-Specific", "web_options_generator"),
+        ("Web Options College-Specific", "college_specific_generator"),
+        ("Web Options Best Possible", "best_specific_generator"),
+        ("College-wise Branches", "college_branches"),
+        ("College Search by Branch", "college_search"),
+        ("Phase Comparison", "phase_comparison"),
+        #  "Branch Analysis",
+        ("Help", "help")
+    ]
+
+    tabs = st.tabs([config[0] for config in tab_configs])
+
+    # Render tabs with lazy loading
+    for i, (tab_name, module_name) in enumerate(tab_configs):
+        with tabs[i]:
+            if module_name == "help":
+                render_help_tab_optimized()
+            else:
+                # Only load and render if this tab is likely active
+                # (Streamlit doesn't provide direct tab state, so we render all but with optimizations)
+                success = LazyModuleLoader.render_module(module_name)
+                if not success and module_name != "help":
+                    st.info(
+                        f"The {tab_name} feature is temporarily unavailable. Please try refreshing the page.")
+
+# ============================================================================
+# MAIN APPLICATION FUNCTION
+# ============================================================================
+
+
+def main():
+    """Optimized main application function"""
+    # Start performance monitoring
+    perf_metrics = PerformanceMonitor.start_monitoring()
+
+    # Initialize session state
+    SessionManager.initialize()
+
+    # Configure page only once
+    if not st.session_state.get('page_configured', False):
+        st.set_page_config(
+            page_title="TS EAMCET 2025 College Predictor",
+            page_icon="🎓",
+            layout="wide",
+            initial_sidebar_state="collapsed"
+        )
+        st.session_state.page_configured = True
+
+    # Debug settings (only in development)
+    # if not os.getenv('STREAMLIT_ENV') == 'production':
+    #     with st.sidebar:
+    #         st.session_state.show_debug_metrics = st.checkbox(
+    #             "Show Debug Metrics")
+
+    # Main title
+    st.title("🎓 TS EAMCET 2025 College Predictor")
+
+    # Handle data loading with error recovery
+    if not SessionManager.ensure_data_loaded():
+        SessionManager.handle_data_error()
+        return
+
+    # Render main content
+    render_tabs_optimized()
+
+    # Footer and support sections (optimized)
+    create_optimized_footer()
+    render_support_section()
+
+    # Additional notices
+    current_time = get_current_time_ist()
+
+    with st.expander("📋 Important Updates & Information"):
+        st.info("""
+        **Note**: Due to changes in local and non-local quota policies for TS EAPCET 2025, 
+        cutoff ranks may increase significantly compared to previous years. For example, 
+        a 1000 rank in 2024 may correspond to a 1500–2000 rank in 2025. 
+        Please consider this while selecting your web options. ALL THE BEST! 😊
+        """)
+
+        st.caption(f"**Data Source**: TGEAPCET 2024 Last Rank Statement")
+        st.caption(f"**Last Updated**: {current_time}")
+
+    # Final message
+    st.markdown(
+        "# ALL THE BEST FOR YOUR [**NEXTSTEP**](https://nextstep-student-hub.vercel.app/)! 😊🎉")
+
+    # Log performance metrics
+    PerformanceMonitor.log_performance(perf_metrics, "Main app render")
+
+# ============================================================================
+# ENTRY POINT
+# ============================================================================
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        logger.error(f"Critical application error: {e}")
+        st.error("""
+        🚨 **Application Error**
+        
+        Something went wrong! Please try:
+        1. Refreshing the page
+        2. Clearing your browser cache
+        3. Contacting support if the issue persists
+        """)
+
+        # Show error details in development
+        # if not os.getenv('STREAMLIT_ENV') == 'production':
+        #     st.exception(e)
