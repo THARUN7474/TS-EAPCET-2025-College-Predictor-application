@@ -12,6 +12,7 @@ from modules.constants import (
 )
 
 
+@st.cache_data(ttl=1800)
 def get_college_list_by_type(list_type, gender=None):
     """
     Get the appropriate college list based on user selection.
@@ -42,6 +43,7 @@ def get_college_list_by_type(list_type, gender=None):
         return TOP_COLLEGES  # Default fallback
 
 
+@st.cache_data(ttl=1800)
 def get_web_options(user_rank, gender, caste, preferred_branches, phase="Final Phase", buffer=1000, list_type="Manual Ranking (Our Curated List)"):
     """
     Generate web options based on user's rank and preferred branches.

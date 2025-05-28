@@ -3,10 +3,12 @@ College prediction functions for the TS EAMCET College Predictor.
 """
 
 import pandas as pd
+import streamlit as st
 from .data_loader import load_data
 from .constants import get_caste_column_name, BRANCH_MAP
 
 
+@st.cache_data(ttl=1800)
 def predict_colleges(rank, gender, caste, branch, phase_selection, district_filter=None):
     """
     Predict colleges based on user inputs.
@@ -98,7 +100,10 @@ def predict_colleges(rank, gender, caste, branch, phase_selection, district_filt
 
     return result_df
 
+# Cache your prediction function
 
+
+@st.cache_data(ttl=1800)
 def compare_phases(rank, gender, caste, branch, top_n=5):
     """
     Compare college predictions across different counseling phases.
@@ -123,7 +128,10 @@ def compare_phases(rank, gender, caste, branch, top_n=5):
 
     return comparison
 
+# Cache your prediction function
 
+
+@st.cache_data(ttl=1800)
 def get_college_branches(college_name, phase_selection, gender, caste):
     """
     Get all branches available in a specific college with their cutoffs.
@@ -190,7 +198,10 @@ def get_college_branches(college_name, phase_selection, gender, caste):
 
     return result_df
 
+# Cache your prediction function
 
+
+@st.cache_data(ttl=1800)
 def analyze_branch_cutoffs(branch_caste, branch_gender, phase="Final Phase"):
     """
     Analyze cutoff trends across different branches.

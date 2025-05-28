@@ -13,6 +13,9 @@ from datetime import datetime
 from functools import lru_cache
 from typing import Optional, Dict, Any, Tuple
 
+
+# This allows both local and Railway deployment
+port = int(os.environ.get("PORT", 8501))
 # ============================================================================
 # PERFORMANCE MONITORING & LOGGING CONFIGURATION
 # ============================================================================

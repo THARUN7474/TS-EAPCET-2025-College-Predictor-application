@@ -16,6 +16,7 @@ from modules.constants import (
     BRANCH_MAP, TOP_COLLEGES, TOP_COLLEGES_CUTTOFF_MALES, TOP_COLLEGES_CUTTOFF_FEMALES,
     TOP_COLLEGES__MALES, TOP_COLLEGES__FEMALES, get_caste_column_name
 )
+# from modules.pdf_generator import dataframe_to_pdf
 
 # Define branch priorities and categories
 CSE_BRANCHES = [
@@ -54,6 +55,7 @@ def get_college_list_by_type(list_type, gender=None):
         return TOP_COLLEGES
 
 
+@st.cache_data(ttl=1800)
 def get_hardcoded_best_list(list_type="Manual Ranking (Our Curated List)", gender="Male"):
     """
     Generate Type 1: Hardcoded Best List - Pre-generated optimal order
@@ -195,6 +197,7 @@ def get_hardcoded_best_list(list_type="Manual Ranking (Our Curated List)", gende
     return hardcoded_options
 
 
+@st.cache_data(ttl=1800)
 def get_rank_based_best_list(user_rank, gender, caste, phase="Final Phase", buffer=1000, list_type="Manual Ranking (Our Curated List)"):
     """
     Generate Type 2: Rank-based Best List - Adapts based on candidate's rank
@@ -562,6 +565,14 @@ def render():
                 file_name=f"TS_EAMCET_2025_WebOptions_Rank_{list_type.replace(' ', '_')}_{caste}_{gender}.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
+
+            # pdf_bytes = dataframe_to_pdf(df_results)
+            # st.download_button(
+            #     label="Download Results as PDF",
+            #     data=pdf_bytes,
+            #     file_name=f"Best_WebOptions_Rank_{user_rank}_{caste}_{gender}.pdf",
+            #     mime="application/pdf"
+            # )
 
         else:  # Template mode
             st.markdown("### 📋 Complete Strategic Template")
